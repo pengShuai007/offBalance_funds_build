@@ -10,7 +10,7 @@
 	</select>
 
 	<select id="list" resultType="com.bootdo.system.domain.DeptDO">
-		select `dept_id`,`parent_id`,`name`,`order_num`,`del_flag` from
+		select `dept_id`,`parent_id`,`name`,`order_num`,`del_flag`,company_id from
 		sys_dept
 		<where>
 			<if test="deptId != null and deptId != ''"> and dept_id = #{deptId} </if>
@@ -18,6 +18,7 @@
 			<if test="name != null and name != ''"> and name = #{name} </if>
 			<if test="orderNum != null and orderNum != ''"> and order_num = #{orderNum} </if>
 			<if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
+			<if test="companyId != null and companyId != ''"> and company_id = #{companyId} </if>
 		</where>
 		<choose>
 			<when test="sort != null and sort.trim() != ''">

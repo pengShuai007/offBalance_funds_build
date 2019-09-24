@@ -10,7 +10,7 @@
     <select id="list" resultType="com.bootdo.system.domain.UserDO">
         select
         `user_id`,`username`,`name`,`password`,`dept_id`,`email`,`mobile`,`status`,`user_id_create`,`gmt_create`,`gmt_modified`,`sex`,`birth`,`pic_id`,`live_address`,`hobby`,`province`,`city`,`district`,
-        admin_org_code,admin_org_name,party_org_code,party_org_name,communist_org_code,communist_org_name,trade_union_code,trade_union_name,post_name,office_tel,direct_leader_name,creator,updater
+        admin_org_code,admin_org_name,party_org_code,party_org_name,communist_org_code,communist_org_name,trade_union_code,trade_union_name,post_name,office_tel,direct_leader_name,creator,updater,company_id
         from sys_user
         <where>
             <if test="userId != null and userId != ''">and user_id = #{userId}</if>
@@ -48,6 +48,7 @@
             <if test="postName != null and postName != ''">and post_name = #{postName}</if>
             <if test="officeTel != null and officeTel != ''">and office_tel = #{officeTel}</if>
             <if test="directLeaderName != null and directLeaderName != ''">and direct_leader_name = #{directLeaderName}</if>
+            <if test="companyId != null and companyId != ''">and company_id = #{companyId}</if>
         </where>
         <choose>
             <when test="sort != null and sort.trim() != ''">
@@ -84,6 +85,18 @@
             <if test="province != null and province != ''">and province = #{province}</if>
             <if test="city != null and city != ''">and city = #{city}</if>
             <if test="district != null and district != ''">and district = #{district}</if>
+            <if test="adminOrgCode != null and adminOrgCode != ''">and admin_org_code = #{adminOrgCode}</if>
+            <if test="adminOrgName != null and adminOrgName != ''">and admin_org_name regexp #{adminOrgName}</if>
+            <if test="partyOrgCode != null and partyOrgCode != ''">and party_org_code = #{partyOrgCode}</if>
+            <if test="partyOrgName != null and partyOrgName != ''">and party_org_name regexp #{partyOrgName}</if>
+            <if test="communistOrgCode != null and communistOrgCode != ''">and communist_org_code = #{communistOrgCode}</if>
+            <if test="communistOrgName != null and communistOrgName != ''">and communist_org_name regexp #{communistOrgName}</if>
+            <if test="tradeUnionCode != null and tradeUnionCode != ''">and trade_union_code = #{tradeUnionCode}</if>
+            <if test="tradeUnionName != null and tradeUnionName != ''">and trade_union_name regexp #{tradeUnionName}</if>
+            <if test="postName != null and postName != ''">and post_name = #{postName}</if>
+            <if test="officeTel != null and officeTel != ''">and office_tel = #{officeTel}</if>
+            <if test="directLeaderName != null and directLeaderName != ''">and direct_leader_name = #{directLeaderName}</if>
+            <if test="companyId != null and companyId != ''">and company_id = #{companyId}</if>
         </where>
     </select>
 
@@ -110,7 +123,7 @@
 -- 			`district`,
 			admin_org_code,admin_org_name,party_org_code,party_org_name,
 			communist_org_code,communist_org_name,trade_union_code,trade_union_name,
-			post_name,office_tel,direct_leader_name,creator,updater
+			post_name,office_tel,direct_leader_name,creator,updater,company_id
 		)
 		values
 		(
@@ -133,7 +146,7 @@
 -- 			#{city},
 -- 			#{district},
             #{adminOrgCode}, #{adminOrgName},#{partyOrgCode},#{partyOrgName},#{communistOrgCode}, #{communistOrgName},
-            #{tradeUnionCode},#{tradeUnionName},#{postName},#{officeTel},#{directLeaderName},#{creator},#{updater}
+            #{tradeUnionCode},#{tradeUnionName},#{postName},#{officeTel},#{directLeaderName},#{creator},#{updater},#{companyId}
 		)
 	</insert>
     <update id="update" parameterType="com.bootdo.system.domain.UserDO">
@@ -164,6 +177,7 @@
             <if test="directLeaderName != null">direct_leader_name = #{directLeaderName},</if>
             <if test="creator != null">creator = #{creator},</if>
             <if test="updater != null">updater = #{updater},</if>
+            <if test="companyId != null">company_id = #{companyId},</if>
         </set>
         where user_id = #{userId}
     </update>

@@ -3,20 +3,18 @@ package com.bootdo.system.controller;
 import com.bootdo.common.annotation.Log;
 import com.bootdo.common.config.Constant;
 import com.bootdo.common.controller.BaseController;
-import com.bootdo.common.domain.FileDO;
 import com.bootdo.common.domain.Tree;
 import com.bootdo.common.service.DictService;
-import com.bootdo.common.utils.*;
+import com.bootdo.common.utils.MD5Utils;
+import com.bootdo.common.utils.PageUtils;
+import com.bootdo.common.utils.Query;
+import com.bootdo.common.utils.R;
 import com.bootdo.system.domain.DeptDO;
 import com.bootdo.system.domain.RoleDO;
 import com.bootdo.system.domain.UserDO;
 import com.bootdo.system.service.RoleService;
 import com.bootdo.system.service.UserService;
 import com.bootdo.system.vo.UserVO;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,10 +22,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/sys/user")
 @Controller
@@ -107,14 +105,11 @@ public class UserController extends BaseController {
     }
 
 
-    @RequiresPermissions("sys:user:edit")
-    @Log("更新用户")
-    @PostMapping("/updatePeronal")
+    @Log("修改个人信息")
+    @PostMapping("/updatePersonal")
     @ResponseBody
-    R updatePeronal(UserDO user) {
-        if (Constant.DEMO_ACCOUNT.equals(getUsername())) {
-            return R.error(1, "演示系统不允许修改,完整体验请部署程序");
-        }
+    R updatePersonal(UserDO user) {
+        user.setUserId(getUserId());
         if (userService.updatePersonal(user) > 0) {
             return R.ok();
         }
