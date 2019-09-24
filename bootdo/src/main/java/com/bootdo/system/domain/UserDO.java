@@ -73,6 +73,8 @@ public class UserDO implements Serializable {
     private String postName;
     //办公室电话
     private String officeTel;
+    //直系领导ID
+    private Long directLeaderId;
     //直系领导
     private String directLeaderName;
     //创建人
@@ -338,6 +340,14 @@ public class UserDO implements Serializable {
         this.officeTel = officeTel;
     }
 
+    public Long getDirectLeaderId() {
+        return directLeaderId;
+    }
+
+    public void setDirectLeaderId(Long directLeaderId) {
+        this.directLeaderId = directLeaderId;
+    }
+
     public String getDirectLeaderName() {
         return directLeaderName;
     }
@@ -404,6 +414,7 @@ public class UserDO implements Serializable {
                 ", tradeUnionName='" + tradeUnionName + '\'' +
                 ", postName='" + postName + '\'' +
                 ", officeTel='" + officeTel + '\'' +
+                ", directLeaderId='" + directLeaderId + '\'' +
                 ", directLeaderName='" + directLeaderName + '\'' +
                 ", creator='" + creator + '\'' +
                 ", updater='" + updater + '\'' +
