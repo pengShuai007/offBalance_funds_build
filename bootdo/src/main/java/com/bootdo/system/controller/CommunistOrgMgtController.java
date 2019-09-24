@@ -108,7 +108,7 @@ public class CommunistOrgMgtController {
 		return R.ok();
 	}
 
-	@PostMapping( "/tree")
+	@GetMapping( "/tree")
 	@ResponseBody
 	public Tree<CommunistOrgMgtDO> tree(){
 		Tree<CommunistOrgMgtDO> tree = new Tree<>();

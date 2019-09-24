@@ -76,8 +76,6 @@ public class UserDO implements Serializable {
     //直系领导ID
     private Long directLeaderId;
     //直系领导
-    private String directLeaderId;
-    //直系领导
     private String directLeaderName;
     //创建人
     private String creator;
@@ -382,14 +380,6 @@ public class UserDO implements Serializable {
 
     public void setCompanyId(int companyId) {
         this.companyId = companyId;
-    }
-
-    public String getDirectLeaderId() {
-        return directLeaderId;
-    }
-
-    public void setDirectLeaderId(String directLeaderId) {
-        this.directLeaderId = directLeaderId;
     }
 
     public Long getXtUserId() {
