@@ -42,6 +42,8 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     }
 
 
+    //测试提交
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {//配置消息代理(message broker)
         //点对点式增加一个/queue 消息代理
