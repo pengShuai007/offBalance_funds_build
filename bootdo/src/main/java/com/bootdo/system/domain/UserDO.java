@@ -83,6 +83,8 @@ public class UserDO implements Serializable {
     private String updater;
     //公司ID
     private int companyId;
+    //协同系统用户ID
+    private Long XtUserId;
 
     public Long getUserId() {
         return userId;
@@ -380,6 +382,14 @@ public class UserDO implements Serializable {
         this.companyId = companyId;
     }
 
+    public Long getXtUserId() {
+        return XtUserId;
+    }
+
+    public void setXtUserId(Long xtUserId) {
+        XtUserId = xtUserId;
+    }
+
     @Override
     public String toString() {
         return "UserDO{" +
@@ -419,6 +429,7 @@ public class UserDO implements Serializable {
                 ", creator='" + creator + '\'' +
                 ", updater='" + updater + '\'' +
                 ", companyId='" + companyId + '\'' +
+                ", XtUserId='" + XtUserId + '\'' +
                 '}';
     }
 }
