@@ -6,12 +6,13 @@ import com.bootdo.common.controller.BaseController;
 import com.bootdo.common.domain.FileDO;
 import com.bootdo.common.domain.Tree;
 import com.bootdo.common.service.FileService;
-import com.bootdo.common.utils.*;
+import com.bootdo.common.utils.MD5Utils;
+import com.bootdo.common.utils.R;
+import com.bootdo.common.utils.RandomValidateCodeUtil;
+import com.bootdo.common.utils.ShiroUtils;
 import com.bootdo.system.domain.MenuDO;
 import com.bootdo.system.service.MenuService;
-import io.swagger.models.auth.In;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -21,7 +22,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,22 +75,21 @@ public class LoginController extends BaseController {
     @Log("登录")
     @PostMapping("/login")
     @ResponseBody
-    R ajaxLogin(String username, String password, String verify, HttpServletRequest request) {
-
-        try {
-            //从session中获取随机数
-            String random = (String) request.getSession().getAttribute(RandomValidateCodeUtil.RANDOMCODEKEY);
-            if (StringUtils.isBlank(verify)) {
-                return R.error("请输入验证码");
-            }
-            if (random.equals(verify)) {
-            } else {
-                return R.error("请输入正确的验证码");
-            }
-        } catch (Exception e) {
-            logger.error("验证码校验失败", e);
-            return R.error("验证码校验失败");
-        }
+    R ajaxLogin(String username, String password,String verify, HttpServletRequest request) {
+//        try {
+//            //从session中获取随机数
+//            String random = (String) request.getSession().getAttribute(RandomValidateCodeUtil.RANDOMCODEKEY);
+//            if (StringUtils.isBlank(verify)) {
+//                return R.error("请输入验证码");
+//            }
+//            if (random.equals(verify)) {
+//            } else {
+//                return R.error("请输入正确的验证码");
+//            }
+//        } catch (Exception e) {
+//            logger.error("验证码校验失败", e);
+//            return R.error("验证码校验失败");
+//        }
         password = MD5Utils.encrypt(username, password);
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         Subject subject = SecurityUtils.getSubject();
