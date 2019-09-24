@@ -24,7 +24,8 @@ public class DeptDO implements Serializable {
 	private Integer orderNum;
 	//是否删除  -1：已删除  0：正常
 	private Integer delFlag;
-
+	//公司ID
+	private Integer companyId;
 	/**
 	 * 设置：
 	 */

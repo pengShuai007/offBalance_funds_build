@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.system.dao.CompanyMgtDao">
+
+	<select id="get" resultType="com.bootdo.system.domain.CompanyMgtDO">
+		select `ID`,`COMPANY_NAME`,`COMPANY_LEVEL`,`COMMENTS`,`CREATE_TIME`,`CREATOR`,`UPDATE_TIME`,`UPDATER` from obf_company_mgt where ID = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.system.domain.CompanyMgtDO">
+		select `ID`,`COMPANY_NAME`,`COMPANY_LEVEL`,`COMMENTS`,`CREATE_TIME`,`CREATOR`,`UPDATE_TIME`,`UPDATER` from obf_company_mgt
+        <where>  
+		  		  <if test="id != null and id != ''"> and ID = #{id} </if>
+		  		  <if test="companyName != null and companyName != ''"> and COMPANY_NAME = #{companyName} </if>
+		  		  <if test="companyLevel != null and companyLevel != ''"> and COMPANY_LEVEL = #{companyLevel} </if>
+		  		  <if test="comments != null and comments != ''"> and COMMENTS = #{comments} </if>
+		  		  <if test="createTime != null and createTime != ''"> and CREATE_TIME = #{createTime} </if>
+		  		  <if test="creator != null and creator != ''"> and CREATOR = #{creator} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and UPDATE_TIME = #{updateTime} </if>
+		  		  <if test="updater != null and updater != ''"> and UPDATER = #{updater} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by ID desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from obf_company_mgt
+		 <where>  
+		  		  <if test="id != null and id != ''"> and ID = #{id} </if>
+		  		  <if test="companyName != null and companyName != ''"> and COMPANY_NAME = #{companyName} </if>
+		  		  <if test="companyLevel != null and companyLevel != ''"> and COMPANY_LEVEL = #{companyLevel} </if>
+		  		  <if test="comments != null and comments != ''"> and COMMENTS = #{comments} </if>
+		  		  <if test="createTime != null and createTime != ''"> and CREATE_TIME = #{createTime} </if>
+		  		  <if test="creator != null and creator != ''"> and CREATOR = #{creator} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and UPDATE_TIME = #{updateTime} </if>
+		  		  <if test="updater != null and updater != ''"> and UPDATER = #{updater} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.system.domain.CompanyMgtDO" useGeneratedKeys="true" keyProperty="id">
+		insert into obf_company_mgt
+		(
+			`COMPANY_NAME`, 
+			`COMPANY_LEVEL`, 
+			`COMMENTS`, 
+			`CREATE_TIME`, 
+			`CREATOR`, 
+			`UPDATE_TIME`, 
+			`UPDATER`
+		)
+		values
+		(
+			#{companyName}, 
+			#{companyLevel}, 
+			#{comments}, 
+			#{createTime}, 
+			#{creator}, 
+			#{updateTime}, 
+			#{updater}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.system.domain.CompanyMgtDO">
+		update obf_company_mgt 
+		<set>
+			<if test="companyName != null">`COMPANY_NAME` = #{companyName}, </if>
+			<if test="companyLevel != null">`COMPANY_LEVEL` = #{companyLevel}, </if>
+			<if test="comments != null">`COMMENTS` = #{comments}, </if>
+			<if test="createTime != null">`CREATE_TIME` = #{createTime}, </if>
+			<if test="creator != null">`CREATOR` = #{creator}, </if>
+			<if test="updateTime != null">`UPDATE_TIME` = #{updateTime}, </if>
+			<if test="updater != null">`UPDATER` = #{updater}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from obf_company_mgt where ID = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from obf_company_mgt where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

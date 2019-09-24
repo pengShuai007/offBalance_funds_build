@@ -34,4 +34,6 @@ public interface DeptService {
 	boolean checkDeptHasUser(Long deptId);
 
 	List<Long> listChildrenIds(Long parentId);
+
+	Tree<DeptDO> getCompanyAndDeptTree();
 }

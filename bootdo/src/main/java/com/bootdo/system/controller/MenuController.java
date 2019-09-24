@@ -127,4 +127,12 @@ public class MenuController extends BaseController {
 		Tree<MenuDO> tree = menuService.getTree(roleId);
 		return tree;
 	}
+
+	@GetMapping("/getMenuTreeByUserId")
+	@ResponseBody
+	List<Tree<MenuDO>> getMenuTreeByUserId(){
+		List<Tree<MenuDO>> menus = menuService.listMenuTree(getUserId());
+		return menus;
+	}
+
 }
