@@ -1,5 +1,6 @@
 package com.bootdo.system.service;
 
+import com.bootdo.common.domain.Tree;
 import com.bootdo.system.domain.PartyOrgMgtDO;
 
 import java.util.List;
@@ -27,4 +28,6 @@ public interface PartyOrgMgtService {
 	int remove(Integer id);
 	
 	int batchRemove(Integer[] ids);
+
+	Tree<PartyOrgMgtDO> getTree();
 }

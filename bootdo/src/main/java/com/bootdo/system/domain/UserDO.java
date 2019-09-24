@@ -74,6 +74,8 @@ public class UserDO implements Serializable {
     //办公室电话
     private String officeTel;
     //直系领导
+    private String directLeaderId;
+    //直系领导
     private String directLeaderName;
     //创建人
     private String creator;
@@ -81,6 +83,8 @@ public class UserDO implements Serializable {
     private String updater;
     //公司ID
     private int companyId;
+    //协同系统用户ID
+    private Long XtUserId;
 
     public Long getUserId() {
         return userId;
@@ -370,6 +374,22 @@ public class UserDO implements Serializable {
         this.companyId = companyId;
     }
 
+    public String getDirectLeaderId() {
+        return directLeaderId;
+    }
+
+    public void setDirectLeaderId(String directLeaderId) {
+        this.directLeaderId = directLeaderId;
+    }
+
+    public Long getXtUserId() {
+        return XtUserId;
+    }
+
+    public void setXtUserId(Long xtUserId) {
+        XtUserId = xtUserId;
+    }
+
     @Override
     public String toString() {
         return "UserDO{" +
@@ -404,10 +424,12 @@ public class UserDO implements Serializable {
                 ", tradeUnionName='" + tradeUnionName + '\'' +
                 ", postName='" + postName + '\'' +
                 ", officeTel='" + officeTel + '\'' +
+                ", directLeaderId='" + directLeaderId + '\'' +
                 ", directLeaderName='" + directLeaderName + '\'' +
                 ", creator='" + creator + '\'' +
                 ", updater='" + updater + '\'' +
                 ", companyId='" + companyId + '\'' +
+                ", XtUserId='" + XtUserId + '\'' +
                 '}';
     }
 }
