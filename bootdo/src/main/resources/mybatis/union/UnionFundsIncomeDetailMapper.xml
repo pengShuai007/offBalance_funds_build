@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.union.dao.UnionFundsIncomeDetailDao">
+
+	<select id="get" resultType="com.bootdo.union.domain.UnionFundsIncomeDetailDO">
+		select `id`,`income_id`,`record_id`,`type`,`description`,`enter_date`,`acount_date`,`amount`,`voucher`,`remarks` from union_funds_income_detail where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.union.domain.UnionFundsIncomeDetailDO">
+		select `id`,`income_id`,`record_id`,`type`,`description`,`enter_date`,`acount_date`,`amount`,`voucher`,`remarks` from union_funds_income_detail
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="incomeId != null and incomeId != ''"> and income_id = #{incomeId} </if>
+		  		  <if test="recordId != null and recordId != ''"> and record_id = #{recordId} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="description != null and description != ''"> and description = #{description} </if>
+		  		  <if test="enterDate != null and enterDate != ''"> and enter_date = #{enterDate} </if>
+		  		  <if test="acountDate != null and acountDate != ''"> and acount_date = #{acountDate} </if>
+		  		  <if test="amount != null and amount != ''"> and amount = #{amount} </if>
+		  		  <if test="voucher != null and voucher != ''"> and voucher = #{voucher} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from union_funds_income_detail
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="incomeId != null and incomeId != ''"> and income_id = #{incomeId} </if>
+		  		  <if test="recordId != null and recordId != ''"> and record_id = #{recordId} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="description != null and description != ''"> and description = #{description} </if>
+		  		  <if test="enterDate != null and enterDate != ''"> and enter_date = #{enterDate} </if>
+		  		  <if test="acountDate != null and acountDate != ''"> and acount_date = #{acountDate} </if>
+		  		  <if test="amount != null and amount != ''"> and amount = #{amount} </if>
+		  		  <if test="voucher != null and voucher != ''"> and voucher = #{voucher} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.union.domain.UnionFundsIncomeDetailDO" useGeneratedKeys="true" keyProperty="id">
+		insert into union_funds_income_detail
+		(
+			`income_id`, 
+			`record_id`, 
+			`type`, 
+			`description`, 
+			`enter_date`, 
+			`acount_date`, 
+			`amount`, 
+			`voucher`, 
+			`remarks`
+		)
+		values
+		(
+			#{incomeId}, 
+			#{recordId}, 
+			#{type}, 
+			#{description}, 
+			#{enterDate}, 
+			#{acountDate}, 
+			#{amount}, 
+			#{voucher}, 
+			#{remarks}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.union.domain.UnionFundsIncomeDetailDO">
+		update union_funds_income_detail 
+		<set>
+			<if test="incomeId != null">`income_id` = #{incomeId}, </if>
+			<if test="recordId != null">`record_id` = #{recordId}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="description != null">`description` = #{description}, </if>
+			<if test="enterDate != null">`enter_date` = #{enterDate}, </if>
+			<if test="acountDate != null">`acount_date` = #{acountDate}, </if>
+			<if test="amount != null">`amount` = #{amount}, </if>
+			<if test="voucher != null">`voucher` = #{voucher}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from union_funds_income_detail where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from union_funds_income_detail where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

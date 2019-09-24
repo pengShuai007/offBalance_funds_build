@@ -77,7 +77,7 @@ public class ModelController extends BaseController {
         String name = "new-process";
         String description = "";
         int revision = 1;
-        String key = "model";
+        String key = "process-inion-funds";
 
         ObjectNode modelNode = objectMapper.createObjectNode();
         modelNode.put(ModelDataJsonConstants.MODEL_NAME, name);
@@ -216,7 +216,7 @@ public class ModelController extends BaseController {
             modelJson.put(MODEL_DESCRIPTION, description);
             model.setMetaInfo(modelJson.toString());
             model.setName(name);
-
+            model.setKey("process-inion-funds");
             repositoryService.saveModel(model);
 
             repositoryService.addModelEditorSource(model.getId(), json_xml.getBytes(StandardCharsets.UTF_8));

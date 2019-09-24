@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.union.dao.UnionFundsExpendRecordDao">
+
+	<select id="get" resultType="com.bootdo.union.domain.UnionFundsExpendRecordDO">
+		select `id`,`record_id`,`out_company_id`,`out_company_name`,`in_company_id`,`in_company_name`,`apply_person`,`apply_department`,`type`,`reason`,`amount`,`expen_time`,`payment_type`,`activity_type`,`activity_direction`,`activity_unit`,`activity_time`,`activity_person_num`,`remarks` from union_funds_expend_record where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.union.domain.UnionFundsExpendRecordDO">
+		select `id`,`record_id`,`out_company_id`,`out_company_name`,`in_company_id`,`in_company_name`,`apply_person`,`apply_department`,`type`,`reason`,`amount`,`expen_time`,`payment_type`,`activity_type`,`activity_direction`,`activity_unit`,`activity_time`,`activity_person_num`,`remarks` from union_funds_expend_record
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="recordId != null and recordId != ''"> and record_id = #{recordId} </if>
+		  		  <if test="outCompanyId != null and outCompanyId != ''"> and out_company_id = #{outCompanyId} </if>
+		  		  <if test="outCompanyName != null and outCompanyName != ''"> and out_company_name = #{outCompanyName} </if>
+		  		  <if test="inCompanyId != null and inCompanyId != ''"> and in_company_id = #{inCompanyId} </if>
+		  		  <if test="inCompanyName != null and inCompanyName != ''"> and in_company_name = #{inCompanyName} </if>
+		  		  <if test="applyPerson != null and applyPerson != ''"> and apply_person = #{applyPerson} </if>
+		  		  <if test="applyDepartment != null and applyDepartment != ''"> and apply_department = #{applyDepartment} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="reason != null and reason != ''"> and reason = #{reason} </if>
+		  		  <if test="amount != null and amount != ''"> and amount = #{amount} </if>
+		  		  <if test="expenTime != null and expenTime != ''"> and expen_time = #{expenTime} </if>
+		  		  <if test="paymentType != null and paymentType != ''"> and payment_type = #{paymentType} </if>
+		  		  <if test="activityType != null and activityType != ''"> and activity_type = #{activityType} </if>
+		  		  <if test="activityDirection != null and activityDirection != ''"> and activity_direction = #{activityDirection} </if>
+		  		  <if test="activityUnit != null and activityUnit != ''"> and activity_unit = #{activityUnit} </if>
+		  		  <if test="activityTime != null and activityTime != ''"> and activity_time = #{activityTime} </if>
+		  		  <if test="activityPersonNum != null and activityPersonNum != ''"> and activity_person_num = #{activityPersonNum} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from union_funds_expend_record
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="recordId != null and recordId != ''"> and record_id = #{recordId} </if>
+		  		  <if test="outCompanyId != null and outCompanyId != ''"> and out_company_id = #{outCompanyId} </if>
+		  		  <if test="outCompanyName != null and outCompanyName != ''"> and out_company_name = #{outCompanyName} </if>
+		  		  <if test="inCompanyId != null and inCompanyId != ''"> and in_company_id = #{inCompanyId} </if>
+		  		  <if test="inCompanyName != null and inCompanyName != ''"> and in_company_name = #{inCompanyName} </if>
+		  		  <if test="applyPerson != null and applyPerson != ''"> and apply_person = #{applyPerson} </if>
+		  		  <if test="applyDepartment != null and applyDepartment != ''"> and apply_department = #{applyDepartment} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="reason != null and reason != ''"> and reason = #{reason} </if>
+		  		  <if test="amount != null and amount != ''"> and amount = #{amount} </if>
+		  		  <if test="expenTime != null and expenTime != ''"> and expen_time = #{expenTime} </if>
+		  		  <if test="paymentType != null and paymentType != ''"> and payment_type = #{paymentType} </if>
+		  		  <if test="activityType != null and activityType != ''"> and activity_type = #{activityType} </if>
+		  		  <if test="activityDirection != null and activityDirection != ''"> and activity_direction = #{activityDirection} </if>
+		  		  <if test="activityUnit != null and activityUnit != ''"> and activity_unit = #{activityUnit} </if>
+		  		  <if test="activityTime != null and activityTime != ''"> and activity_time = #{activityTime} </if>
+		  		  <if test="activityPersonNum != null and activityPersonNum != ''"> and activity_person_num = #{activityPersonNum} </if>
+		  		  <if test="remarks != null and remarks != ''"> and remarks = #{remarks} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.union.domain.UnionFundsExpendRecordDO" useGeneratedKeys="true" keyProperty="id">
+		insert into union_funds_expend_record
+		(
+			`record_id`, 
+			`out_company_id`, 
+			`out_company_name`, 
+			`in_company_id`, 
+			`in_company_name`, 
+			`apply_person`, 
+			`apply_department`, 
+			`type`, 
+			`reason`, 
+			`amount`, 
+			`expen_time`, 
+			`payment_type`, 
+			`activity_type`, 
+			`activity_direction`, 
+			`activity_unit`, 
+			`activity_time`, 
+			`activity_person_num`, 
+			`remarks`
+		)
+		values
+		(
+			#{recordId}, 
+			#{outCompanyId}, 
+			#{outCompanyName}, 
+			#{inCompanyId}, 
+			#{inCompanyName}, 
+			#{applyPerson}, 
+			#{applyDepartment}, 
+			#{type}, 
+			#{reason}, 
+			#{amount}, 
+			#{expenTime}, 
+			#{paymentType}, 
+			#{activityType}, 
+			#{activityDirection}, 
+			#{activityUnit}, 
+			#{activityTime}, 
+			#{activityPersonNum}, 
+			#{remarks}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.union.domain.UnionFundsExpendRecordDO">
+		update union_funds_expend_record 
+		<set>
+			<if test="recordId != null">`record_id` = #{recordId}, </if>
+			<if test="outCompanyId != null">`out_company_id` = #{outCompanyId}, </if>
+			<if test="outCompanyName != null">`out_company_name` = #{outCompanyName}, </if>
+			<if test="inCompanyId != null">`in_company_id` = #{inCompanyId}, </if>
+			<if test="inCompanyName != null">`in_company_name` = #{inCompanyName}, </if>
+			<if test="applyPerson != null">`apply_person` = #{applyPerson}, </if>
+			<if test="applyDepartment != null">`apply_department` = #{applyDepartment}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="reason != null">`reason` = #{reason}, </if>
+			<if test="amount != null">`amount` = #{amount}, </if>
+			<if test="expenTime != null">`expen_time` = #{expenTime}, </if>
+			<if test="paymentType != null">`payment_type` = #{paymentType}, </if>
+			<if test="activityType != null">`activity_type` = #{activityType}, </if>
+			<if test="activityDirection != null">`activity_direction` = #{activityDirection}, </if>
+			<if test="activityUnit != null">`activity_unit` = #{activityUnit}, </if>
+			<if test="activityTime != null">`activity_time` = #{activityTime}, </if>
+			<if test="activityPersonNum != null">`activity_person_num` = #{activityPersonNum}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from union_funds_expend_record where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from union_funds_expend_record where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -130,7 +130,7 @@ public class ActTaskServiceImpl implements ActTaskService {
      */
     @Override
     public ProcessInstance startProcess(String procDefKey, String businessId, String title, Map<String, Object> vars) {
-        String userId = ShiroUtils.getUserId().toString();//ObjectUtils.toString(UserUtils.getUser().getId())
+        String userId = ShiroUtils.getUserId().toString();
         // 用来设置启动流程的人员ID，引擎会自动把用户ID保存到activiti:initiator中
         identityService.setAuthenticatedUserId(userId);
         // 设置流程变量
@@ -144,7 +144,7 @@ public class ActTaskServiceImpl implements ActTaskService {
         List<Task> lbefores = taskService.createTaskQuery().processDefinitionKey(procDefKey).list();
         // 启动流程
         ProcessInstance procIns = runtimeService.startProcessInstanceByKey(procDefKey, businessId, vars);
-        this.setAssignee(ActivitiConstant.ACTIVITI_PROCESS_LEAVE);
+        this.setAssignee(ActivitiConstant.ACTIVITI_PROCESS_UNION);
         List<Task> lafters = taskService.createTaskQuery().processDefinitionKey(procDefKey).list();
         lafters.stream().filter(lafter ->
                 lbefores.stream().noneMatch(lbefore ->
