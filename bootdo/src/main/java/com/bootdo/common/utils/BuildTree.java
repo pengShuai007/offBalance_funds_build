@@ -1,5 +1,6 @@
 package com.bootdo.common.utils;
 
+import com.bootdo.common.domain.MenuTree;
 import com.bootdo.common.domain.Tree;
 
 import java.util.ArrayList;
@@ -122,6 +123,36 @@ public class BuildTree {
 				String id = parent.getId();
 				if (id != null && id.equals(pid)) {
 					parent.getChildren().add(children);
+					children.setHasParent(true);
+					parent.setChildren(true);
+
+					continue;
+				}
+			}
+
+		}
+		return topNodes;
+	}
+
+	public static <T> List<MenuTree<T>> buildMenuList(List<MenuTree<T>> nodes, String idParam) {
+		if (nodes == null) {
+			return null;
+		}
+		List<MenuTree<T>> topNodes = new ArrayList<MenuTree<T>>();
+
+		for (MenuTree<T> children : nodes) {
+
+			String pid = children.getParentId();
+			if (pid == null || idParam.equals(pid)) {
+				topNodes.add(children);
+
+				continue;
+			}
+
+			for (MenuTree<T> parent : nodes) {
+				String id = parent.getId();
+				if (id != null && id.equals(pid)) {
+					parent.getList().add(children);
 					children.setHasParent(true);
 					parent.setChildren(true);
 

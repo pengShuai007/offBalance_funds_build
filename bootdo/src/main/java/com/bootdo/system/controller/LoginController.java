@@ -94,7 +94,8 @@ public class LoginController extends BaseController {
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         Subject subject = SecurityUtils.getSubject();
         subject.login(token);
-        return R.ok();
+        String sessionId = subject.getSession().getId() + "";
+        return R.ok("JSESSIONID",sessionId);
     }
 
     @GetMapping("/logout")
