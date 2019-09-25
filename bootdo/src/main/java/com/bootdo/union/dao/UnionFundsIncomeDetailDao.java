@@ -28,4 +28,6 @@ public interface UnionFundsIncomeDetailDao {
 	int remove(Long id);
 	
 	int batchRemove(Long[] ids);
+
+	List<UnionFundsIncomeDetailDO> listByRecordIds(String toString);
 }

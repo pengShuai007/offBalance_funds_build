@@ -5,17 +5,17 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 
+
 /**
  * 工会收入记录表
  * 
  * @author quxuan
  * @email 1992lcg@163.com
- * @date 2019-09-24 16:56:00
+ * @date 2019-09-25 14:26:01
  */
 public class UnionFundsIncomeRecordDO implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
-	//
+
 	private Long id;
 	//收入记录的id
 	private String recordId;
@@ -28,7 +28,9 @@ public class UnionFundsIncomeRecordDO implements Serializable {
 	//支出公司名称
 	private String outCompanyName;
 	//收入总金额，两位小数
-	private BigDecimal amount;
+	private BigDecimal allAmount;
+	//扎帐记录id
+	private String settleAccountsId;
 	//创建人
 	private String creator;
 	//创建时间
@@ -113,14 +115,26 @@ public class UnionFundsIncomeRecordDO implements Serializable {
 	/**
 	 * 设置：收入总金额，两位小数
 	 */
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
+	public void setAllAmount(BigDecimal allAmount) {
+		this.allAmount = allAmount;
 	}
 	/**
 	 * 获取：收入总金额，两位小数
 	 */
-	public BigDecimal getAmount() {
-		return amount;
+	public BigDecimal getAllAmount() {
+		return allAmount;
+	}
+	/**
+	 * 设置：扎帐记录id
+	 */
+	public void setSettleAccountsId(String settleAccountsId) {
+		this.settleAccountsId = settleAccountsId;
+	}
+	/**
+	 * 获取：扎帐记录id
+	 */
+	public String getSettleAccountsId() {
+		return settleAccountsId;
 	}
 	/**
 	 * 设置：创建人

@@ -3,20 +3,22 @@
 
 <mapper namespace="com.bootdo.union.dao.UnionFundsIncomeRecordDao">
 
-	<select id="get" resultType="com.bootdo.union.domain.UnionFundsIncomeRecordDO">
-		select `id`,`record_id`,`in_company_id`,`in_company_name`,`out_company_id`,`out_company_name`,`amount`,`creator`,`create_time`,`modifier`,`modify_time` from union_funds_income_record where id = #{value}
+	<select id="get" resultType="com.bootdo.union.domain.IncomeRecordVO">
+		select `id`,`record_id`,`in_company_id`,`in_company_name`,`out_company_id`,`out_company_name`,`all_amount`,`Settle_accounts_id`,`creator`,`create_time`,`modifier`,`modify_time` from union_funds_income_record where is_delete = 0 and  record_id = #{value}
 	</select>
 
-	<select id="list" resultType="com.bootdo.union.domain.UnionFundsIncomeRecordDO">
-		select `id`,`record_id`,`in_company_id`,`in_company_name`,`out_company_id`,`out_company_name`,`amount`,`creator`,`create_time`,`modifier`,`modify_time` from union_funds_income_record
-        <where>  
+	<select id="list" resultType="com.bootdo.union.domain.IncomeRecordVO">
+		select `id`,`record_id`,`in_company_id`,`in_company_name`,`out_company_id`,`out_company_name`,`all_amount`,`Settle_accounts_id`,`creator`,`create_time`,`modifier`,`modify_time` from union_funds_income_record
+        <where>
+			is_delete = 0
 		  		  <if test="id != null and id != ''"> and id = #{id} </if>
 		  		  <if test="recordId != null and recordId != ''"> and record_id = #{recordId} </if>
 		  		  <if test="inCompanyId != null and inCompanyId != ''"> and in_company_id = #{inCompanyId} </if>
 		  		  <if test="inCompanyName != null and inCompanyName != ''"> and in_company_name = #{inCompanyName} </if>
 		  		  <if test="outCompanyId != null and outCompanyId != ''"> and out_company_id = #{outCompanyId} </if>
 		  		  <if test="outCompanyName != null and outCompanyName != ''"> and out_company_name = #{outCompanyName} </if>
-		  		  <if test="amount != null and amount != ''"> and amount = #{amount} </if>
+		  		  <if test="allAmount != null and allAmount != ''"> and all_amount = #{allAmount} </if>
+		  		  <if test="settleAccountsId != null and settleAccountsId != ''"> and Settle_accounts_id = #{settleAccountsId} </if>
 		  		  <if test="creator != null and creator != ''"> and creator = #{creator} </if>
 		  		  <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
 		  		  <if test="modifier != null and modifier != ''"> and modifier = #{modifier} </if>
@@ -27,7 +29,7 @@
                 order by ${sort} ${order}
             </when>
 			<otherwise>
-                order by id desc
+                order by create_time desc
 			</otherwise>
         </choose>
 		<if test="offset != null and limit != null">
@@ -37,14 +39,16 @@
 	
  	<select id="count" resultType="int">
 		select count(*) from union_funds_income_record
-		 <where>  
+		 <where>
+			 is_delete = 0
 		  		  <if test="id != null and id != ''"> and id = #{id} </if>
 		  		  <if test="recordId != null and recordId != ''"> and record_id = #{recordId} </if>
 		  		  <if test="inCompanyId != null and inCompanyId != ''"> and in_company_id = #{inCompanyId} </if>
 		  		  <if test="inCompanyName != null and inCompanyName != ''"> and in_company_name = #{inCompanyName} </if>
 		  		  <if test="outCompanyId != null and outCompanyId != ''"> and out_company_id = #{outCompanyId} </if>
 		  		  <if test="outCompanyName != null and outCompanyName != ''"> and out_company_name = #{outCompanyName} </if>
-		  		  <if test="amount != null and amount != ''"> and amount = #{amount} </if>
+		  		  <if test="allAmount != null and allAmount != ''"> and all_amount = #{allAmount} </if>
+		  		  <if test="settleAccountsId != null and settleAccountsId != ''"> and Settle_accounts_id = #{settleAccountsId} </if>
 		  		  <if test="creator != null and creator != ''"> and creator = #{creator} </if>
 		  		  <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
 		  		  <if test="modifier != null and modifier != ''"> and modifier = #{modifier} </if>
@@ -60,7 +64,8 @@
 			`in_company_name`, 
 			`out_company_id`, 
 			`out_company_name`, 
-			`amount`, 
+			`all_amount`,
+			`Settle_accounts_id`, 
 			`creator`, 
 			`create_time`, 
 			`modifier`, 
@@ -73,7 +78,8 @@
 			#{inCompanyName}, 
 			#{outCompanyId}, 
 			#{outCompanyName}, 
-			#{amount}, 
+			#{allAmount},
+			#{settleAccountsId}, 
 			#{creator}, 
 			#{createTime}, 
 			#{modifier}, 
@@ -89,23 +95,24 @@
 			<if test="inCompanyName != null">`in_company_name` = #{inCompanyName}, </if>
 			<if test="outCompanyId != null">`out_company_id` = #{outCompanyId}, </if>
 			<if test="outCompanyName != null">`out_company_name` = #{outCompanyName}, </if>
-			<if test="amount != null">`amount` = #{amount}, </if>
+			<if test="allAmount != null">`all_amount` = #{allAmount}, </if>
+			<if test="settleAccountsId != null">`Settle_accounts_id` = #{settleAccountsId}, </if>
 			<if test="creator != null">`creator` = #{creator}, </if>
 			<if test="createTime != null">`create_time` = #{createTime}, </if>
 			<if test="modifier != null">`modifier` = #{modifier}, </if>
 			<if test="modifyTime != null">`modify_time` = #{modifyTime}</if>
 		</set>
-		where id = #{id}
+		where record_id = #{recordId}
 	</update>
 	
 	<delete id="remove">
-		delete from union_funds_income_record where id = #{value}
+		update union_funds_income_record set is_delete = 1 where record_id = #{value}
 	</delete>
 	
 	<delete id="batchRemove">
-		delete from union_funds_income_record where id in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
+		update union_funds_income_record set is_delete = 1 record_id in
+		<foreach item="recordId" collection="array" open="(" separator="," close=")">
+			#{recordId}
 		</foreach>
 	</delete>
 

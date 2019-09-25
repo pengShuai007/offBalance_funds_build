@@ -3,49 +3,12 @@
 
 <mapper namespace="com.bootdo.union.dao.UnionFundsExpendDetailDao">
 
-	<select id="get" resultType="com.bootdo.union.domain.UnionFundsExpendDetailDO">
-		select `id`,`expent_id`,`record_id`,`branch_office`,`amount`,`acount_date`,`item_name`,`number`,`create_time` from union_funds_expend_detail where id = #{value}
-	</select>
-
-	<select id="list" resultType="com.bootdo.union.domain.UnionFundsExpendDetailDO">
+	<!--通过records 查询记录的详情-->
+	<select id="listByRecords" resultType="com.bootdo.union.domain.UnionFundsExpendDetailDO">
 		select `id`,`expent_id`,`record_id`,`branch_office`,`amount`,`acount_date`,`item_name`,`number`,`create_time` from union_funds_expend_detail
-        <where>  
-		  		  <if test="id != null and id != ''"> and id = #{id} </if>
-		  		  <if test="expentId != null and expentId != ''"> and expent_id = #{expentId} </if>
-		  		  <if test="recordId != null and recordId != ''"> and record_id = #{recordId} </if>
-		  		  <if test="branchOffice != null and branchOffice != ''"> and branch_office = #{branchOffice} </if>
-		  		  <if test="amount != null and amount != ''"> and amount = #{amount} </if>
-		  		  <if test="acountDate != null and acountDate != ''"> and acount_date = #{acountDate} </if>
-		  		  <if test="itemName != null and itemName != ''"> and item_name = #{itemName} </if>
-		  		  <if test="number != null and number != ''"> and number = #{number} </if>
-		  		  <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
-		  		</where>
-        <choose>
-            <when test="sort != null and sort.trim() != ''">
-                order by ${sort} ${order}
-            </when>
-			<otherwise>
-                order by id desc
-			</otherwise>
-        </choose>
-		<if test="offset != null and limit != null">
-			limit #{offset}, #{limit}
-		</if>
-	</select>
-	
- 	<select id="count" resultType="int">
-		select count(*) from union_funds_expend_detail
-		 <where>  
-		  		  <if test="id != null and id != ''"> and id = #{id} </if>
-		  		  <if test="expentId != null and expentId != ''"> and expent_id = #{expentId} </if>
-		  		  <if test="recordId != null and recordId != ''"> and record_id = #{recordId} </if>
-		  		  <if test="branchOffice != null and branchOffice != ''"> and branch_office = #{branchOffice} </if>
-		  		  <if test="amount != null and amount != ''"> and amount = #{amount} </if>
-		  		  <if test="acountDate != null and acountDate != ''"> and acount_date = #{acountDate} </if>
-		  		  <if test="itemName != null and itemName != ''"> and item_name = #{itemName} </if>
-		  		  <if test="number != null and number != ''"> and number = #{number} </if>
-		  		  <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
-		  		</where>
+		<where>
+			FIND_IN_SET(record_id,#{value})
+		</where>
 	</select>
 	 
 	<insert id="save" parameterType="com.bootdo.union.domain.UnionFundsExpendDetailDO" useGeneratedKeys="true" keyProperty="id">
@@ -85,18 +48,7 @@
 			<if test="number != null">`number` = #{number}, </if>
 			<if test="createTime != null">`create_time` = #{createTime}</if>
 		</set>
-		where id = #{id}
+		where record_id = #{recordId}
 	</update>
-	
-	<delete id="remove">
-		delete from union_funds_expend_detail where id = #{value}
-	</delete>
-	
-	<delete id="batchRemove">
-		delete from union_funds_expend_detail where id in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
 
 </mapper>

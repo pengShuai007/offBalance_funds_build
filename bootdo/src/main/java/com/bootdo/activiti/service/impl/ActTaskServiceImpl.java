@@ -19,10 +19,12 @@ import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskQuery;
 import org.activiti.image.ProcessDiagramGenerator;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,15 +147,8 @@ public class ActTaskServiceImpl implements ActTaskService {
         // 启动流程
         ProcessInstance procIns = runtimeService.startProcessInstanceByKey(procDefKey, businessId, vars);
         this.setAssignee(ActivitiConstant.ACTIVITI_PROCESS_UNION);
-        List<Task> lafters = taskService.createTaskQuery().processDefinitionKey(procDefKey).list();
-        lafters.stream().filter(lafter ->
-                lbefores.stream().noneMatch(lbefore ->
-                        lbefore.getId().equals(lafter.getId())
-                )
-        ).forEach(task1 -> {
-            //发待办通知等
-            template.convertAndSendToUser(userDao.get(Long.valueOf(task1.getAssignee())).toString(), "/queue/notifications", "新待办：" + task1.getName());
-        });
+        List<Task> lafters1 = taskService.createTaskQuery().processInstanceId(procIns.getId()).taskDefinitionKey(ActivitiConstant.ACTIVITI_PROCESS_UNION_DEPARTMENT_REVIEW).list();
+        //template.convertAndSendToUser(userDao.get(Long.valueOf(task1.getAssignee())).toString(), "/queue/notifications", "新待办：" + task1.getName());
         return procIns;
     }
 

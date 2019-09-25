@@ -3,6 +3,8 @@ package com.bootdo.union.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -10,7 +12,7 @@ import java.util.Date;
  * 
  * @author quxuan
  * @email 1992lcg@163.com
- * @date 2019-09-24 16:56:00
+ * @date 2019-09-25 07:43:59
  */
 public class UnionFundsExpendRecordDO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -31,12 +33,14 @@ public class UnionFundsExpendRecordDO implements Serializable {
 	private String applyPerson;
 	//申请部门
 	private String applyDepartment;
+	//申请时间
+	private Date applyTime;
 	//支出类型
 	private String type;
 	//支出事由
 	private String reason;
 	//支出金额
-	private BigDecimal amount;
+	private BigDecimal allAmount;
 	//出账日期
 	private Date expenTime;
 	//付款方式
@@ -53,6 +57,77 @@ public class UnionFundsExpendRecordDO implements Serializable {
 	private Integer activityPersonNum;
 	//备注
 	private String remarks;
+	//部门领导审核意见
+	private String departmentReview;
+	//主管领导审核意见
+	private String supervisorApproval;
+	//财务审核
+	private String financeReview;
+	//出纳确认
+	private String cashierConfirm;
+	//工作流状态
+	private String activitiStatus;
+
+	//创建时间
+	private Date createTime;
+	//修改人
+	private String modifier;
+	//修改时间
+	private Date modifyTime;
+	//扎帐记录id
+	private String settleAccountsId;
+
+	//流程id
+	private String processInstanceId;
+
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getModifier() {
+		return modifier;
+	}
+
+	public void setModifier(String modifier) {
+		this.modifier = modifier;
+	}
+
+	public Date getModifyTime() {
+		return modifyTime;
+	}
+
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
+	}
+
+	public String getSettleAccountsId() {
+		return settleAccountsId;
+	}
+
+	public void setSettleAccountsId(String settleAccountsId) {
+		this.settleAccountsId = settleAccountsId;
+	}
+
+	public Date getApplyTime() {
+		return applyTime;
+	}
+
+	public void setApplyTime(Date applyTime) {
+		this.applyTime = applyTime;
+	}
+
+	public String getProcessInstanceId() {
+		return processInstanceId;
+	}
+
+	public void setProcessInstanceId(String processInstanceId) {
+		this.processInstanceId = processInstanceId;
+	}
 
 	/**
 	 * 设置：自增主键
@@ -177,14 +252,14 @@ public class UnionFundsExpendRecordDO implements Serializable {
 	/**
 	 * 设置：支出金额
 	 */
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
+	public void setAllAmount(BigDecimal allAmount) {
+		this.allAmount = allAmount;
 	}
 	/**
 	 * 获取：支出金额
 	 */
-	public BigDecimal getAmount() {
-		return amount;
+	public BigDecimal getAllAmount() {
+		return allAmount;
 	}
 	/**
 	 * 设置：出账日期
@@ -281,5 +356,65 @@ public class UnionFundsExpendRecordDO implements Serializable {
 	 */
 	public String getRemarks() {
 		return remarks;
+	}
+	/**
+	 * 设置：部门领导审核意见
+	 */
+	public void setDepartmentReview(String departmentReview) {
+		this.departmentReview = departmentReview;
+	}
+	/**
+	 * 获取：部门领导审核意见
+	 */
+	public String getDepartmentReview() {
+		return departmentReview;
+	}
+	/**
+	 * 设置：主管领导审核意见
+	 */
+	public void setSupervisorApproval(String supervisorApproval) {
+		this.supervisorApproval = supervisorApproval;
+	}
+	/**
+	 * 获取：主管领导审核意见
+	 */
+	public String getSupervisorApproval() {
+		return supervisorApproval;
+	}
+	/**
+	 * 设置：财务审核
+	 */
+	public void setFinanceReview(String financeReview) {
+		this.financeReview = financeReview;
+	}
+	/**
+	 * 获取：财务审核
+	 */
+	public String getFinanceReview() {
+		return financeReview;
+	}
+	/**
+	 * 设置：出纳确认
+	 */
+	public void setCashierConfirm(String cashierConfirm) {
+		this.cashierConfirm = cashierConfirm;
+	}
+	/**
+	 * 获取：出纳确认
+	 */
+	public String getCashierConfirm() {
+		return cashierConfirm;
+	}
+	/**
+	 * 设置：工作流状态
+	 */
+	public void setActivitiStatus(String activitiStatus) {
+		this.activitiStatus = activitiStatus;
+	}
+	/**
+	 * 获取：工作流状态
+	 */
+	public String getActivitiStatus() {
+		return activitiStatus;
 	}
 }

@@ -1,5 +1,7 @@
 package com.bootdo.union.service;
 
+import com.bootdo.union.domain.ExpendRecordVO;
+import com.bootdo.union.domain.UnionFundsExpendDetailDO;
 import com.bootdo.union.domain.UnionFundsExpendRecordDO;
 
 import java.util.List;
@@ -13,18 +15,24 @@ import java.util.Map;
  * @date 2019-09-24 16:56:00
  */
 public interface UnionFundsExpendRecordService {
+
+	ExpendRecordVO get(String recordId);
 	
-	UnionFundsExpendRecordDO get(Long id);
-	
-	List<UnionFundsExpendRecordDO> list(Map<String, Object> map);
+	List<ExpendRecordVO> list(Map<String, Object> map);
 	
 	int count(Map<String, Object> map);
 	
-	int save(UnionFundsExpendRecordDO unionFundsExpendRecord);
+	int save(UnionFundsExpendRecordDO unionFundsExpendRecord, UnionFundsExpendDetailDO detailDO);
+
+	int remove(String id);
 	
-	int update(UnionFundsExpendRecordDO unionFundsExpendRecord, String taskId);
-	
-	int remove(Long id);
-	
-	int batchRemove(Long[] ids);
+	int batchRemove(String[] ids);
+
+    void update(UnionFundsExpendRecordDO unionFundsExpendRecord);
+
+	List<ExpendRecordVO> todoList();
+
+	List<ExpendRecordVO> historyTask();
+
+	boolean edit(UnionFundsExpendRecordDO unionFundsExpendRecord, UnionFundsExpendDetailDO detailDO);
 }

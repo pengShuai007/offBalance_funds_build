@@ -16,16 +16,10 @@ import java.util.Map;
 public interface UnionFundsExpendDetailDao {
 
 	UnionFundsExpendDetailDO get(Long id);
-	
-	List<UnionFundsExpendDetailDO> list(Map<String, Object> map);
-	
-	int count(Map<String, Object> map);
-	
+
 	int save(UnionFundsExpendDetailDO unionFundsExpendDetail);
 	
 	int update(UnionFundsExpendDetailDO unionFundsExpendDetail);
-	
-	int remove(Long id);
-	
-	int batchRemove(Long[] ids);
+
+    List<UnionFundsExpendDetailDO> listByRecords(String recordIds);
 }

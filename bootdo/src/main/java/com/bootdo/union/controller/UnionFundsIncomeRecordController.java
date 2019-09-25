@@ -3,8 +3,14 @@ package com.bootdo.union.controller;
 import com.bootdo.common.utils.PageUtils;
 import com.bootdo.common.utils.Query;
 import com.bootdo.common.utils.R;
+import com.bootdo.common.utils.StringUtils;
+import com.bootdo.union.dao.UnionFundsIncomeDetailDao;
+import com.bootdo.union.domain.ExpendRecordVO;
+import com.bootdo.union.domain.IncomeRecordVO;
+import com.bootdo.union.domain.UnionFundsIncomeDetailDO;
 import com.bootdo.union.domain.UnionFundsIncomeRecordDO;
 import com.bootdo.union.service.UnionFundsIncomeRecordService;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,80 +34,89 @@ public class UnionFundsIncomeRecordController {
 	@Autowired
 	private UnionFundsIncomeRecordService unionFundsIncomeRecordService;
 	
-	@GetMapping()
-	@RequiresPermissions("union:unionFundsIncomeRecord:unionFundsIncomeRecord")
-	String UnionFundsIncomeRecord(){
-	    return "union/unionFundsIncomeRecord/unionFundsIncomeRecord";
-	}
-	
+
 	@ResponseBody
 	@GetMapping("/list")
-	@RequiresPermissions("union:unionFundsIncomeRecord:unionFundsIncomeRecord")
 	public PageUtils list(@RequestParam Map<String, Object> params){
 		//查询列表数据
+		//查询列表数据
+		if(!params.containsKey("offset")){
+			params.put("offset",0);
+		}else if(params.containsKey("offset") && StringUtils.isEmpty((String) params.get("offset"))){
+			params.put("offset",0);
+		}
+		if(!params.containsKey("limit")){
+			params.put("limit",20);
+		}else if(params.containsKey("limit") && StringUtils.isEmpty((String) params.get("limit"))){
+			params.put("limit",20);
+		}
         Query query = new Query(params);
-		List<UnionFundsIncomeRecordDO> unionFundsIncomeRecordList = unionFundsIncomeRecordService.list(query);
+		List<IncomeRecordVO> incomeRecordVOS = unionFundsIncomeRecordService.list(query);
 		int total = unionFundsIncomeRecordService.count(query);
-		PageUtils pageUtils = new PageUtils(unionFundsIncomeRecordList, total);
+		PageUtils pageUtils = new PageUtils(incomeRecordVOS, total);
 		return pageUtils;
 	}
-	
-	@GetMapping("/add")
-	@RequiresPermissions("union:unionFundsIncomeRecord:add")
-	String add(){
-	    return "union/unionFundsIncomeRecord/add";
-	}
 
-	@GetMapping("/edit/{id}")
-	@RequiresPermissions("union:unionFundsIncomeRecord:edit")
-	String edit(@PathVariable("id") Long id,Model model){
-		UnionFundsIncomeRecordDO unionFundsIncomeRecord = unionFundsIncomeRecordService.get(id);
-		model.addAttribute("unionFundsIncomeRecord", unionFundsIncomeRecord);
-	    return "union/unionFundsIncomeRecord/edit";
-	}
-	
 	/**
 	 * 保存
 	 */
 	@ResponseBody
 	@PostMapping("/save")
-	@RequiresPermissions("union:unionFundsIncomeRecord:add")
-	public R save( UnionFundsIncomeRecordDO unionFundsIncomeRecord){
-		if(unionFundsIncomeRecordService.save(unionFundsIncomeRecord)>0){
+	public R save(UnionFundsIncomeRecordDO incomeRecordDO, UnionFundsIncomeDetailDO incomeDetailDO){
+		if(unionFundsIncomeRecordService.save(incomeRecordDO,incomeDetailDO)>0){
 			return R.ok();
 		}
 		return R.error();
 	}
-	/**
-	 * 修改
-	 */
-	@ResponseBody
-	@RequestMapping("/update")
-	@RequiresPermissions("union:unionFundsIncomeRecord:edit")
-	public R update( UnionFundsIncomeRecordDO unionFundsIncomeRecord){
-		unionFundsIncomeRecordService.update(unionFundsIncomeRecord);
-		return R.ok();
-	}
-	
+
 	/**
 	 * 删除
 	 */
 	@PostMapping( "/remove")
 	@ResponseBody
-	@RequiresPermissions("union:unionFundsIncomeRecord:remove")
-	public R remove( Long id){
-		if(unionFundsIncomeRecordService.remove(id)>0){
-		return R.ok();
+	public R remove( String  recordId){
+		if(unionFundsIncomeRecordService.remove(recordId)>0){
+			return R.ok();
 		}
 		return R.error();
 	}
+
+	/**
+	 * 修改
+	 */
+	@ResponseBody
+	@RequestMapping("/update")
+	public R update(UnionFundsIncomeRecordDO recordDO, UnionFundsIncomeDetailDO detailDO){
+		unionFundsIncomeRecordService.update(recordDO,detailDO);
+		return R.ok();
+	}
+
+
+	@ResponseBody
+	@GetMapping("/get")
+	HashedMap get( String recordId){
+		HashedMap result = new HashedMap();
+		result.put("success",true);
+		result.put("code","0000");
+		IncomeRecordVO incomeRecordVO = unionFundsIncomeRecordService.get(recordId);
+		if(null != incomeRecordVO){
+			result.put("data",incomeRecordVO);
+		}else {
+			result.put("success",false);
+			result.put("code","0001");
+			result.put("data",null);
+		}
+
+		return result;
+	}
+	
+
 	
 	/**
 	 * 删除
 	 */
 	@PostMapping( "/batchRemove")
 	@ResponseBody
-	@RequiresPermissions("union:unionFundsIncomeRecord:batchRemove")
 	public R remove(@RequestParam("ids[]") Long[] ids){
 		unionFundsIncomeRecordService.batchRemove(ids);
 		return R.ok();

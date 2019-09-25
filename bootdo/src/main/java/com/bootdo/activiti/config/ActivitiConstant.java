@@ -27,4 +27,5 @@ public class ActivitiConstant {
     public static final String ACTIVITI_PROCESS_UNION_FINANCE_REVIEW = "finance_review";
     //出纳确认
     public static final String ACTIVITI_PROCESS_UNION_CASHIER_CONFIRM = "cashier_confirm";
+    public static final String ACTIVITI_PROCESS_UNION_END = "union_funds_end";
 }

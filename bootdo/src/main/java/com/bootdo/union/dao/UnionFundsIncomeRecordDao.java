@@ -1,5 +1,6 @@
 package com.bootdo.union.dao;
 
+import com.bootdo.union.domain.IncomeRecordVO;
 import com.bootdo.union.domain.UnionFundsIncomeRecordDO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -15,9 +16,9 @@ import java.util.Map;
 @Mapper
 public interface UnionFundsIncomeRecordDao {
 
-	UnionFundsIncomeRecordDO get(Long id);
+	IncomeRecordVO get(String recordId);
 	
-	List<UnionFundsIncomeRecordDO> list(Map<String, Object> map);
+	List<IncomeRecordVO> list(Map<String, Object> map);
 	
 	int count(Map<String, Object> map);
 	
@@ -25,7 +26,7 @@ public interface UnionFundsIncomeRecordDao {
 	
 	int update(UnionFundsIncomeRecordDO unionFundsIncomeRecord);
 	
-	int remove(Long id);
+	int remove(String id);
 	
 	int batchRemove(Long[] ids);
 }

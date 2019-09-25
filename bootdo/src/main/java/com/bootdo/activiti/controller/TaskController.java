@@ -76,11 +76,13 @@ public class TaskController {
         response.sendRedirect(formKey + "/" + taskId);
     }
 
-    @GetMapping("/todo")
-    ModelAndView todo() {
-        return new ModelAndView("act/task/todoTask");
-    }
-
+    /**
+    * @Description:  工作流的代办列表
+    * @Param:
+    * @return:
+    * @Author: quxuan
+    * @Date: 2019/9/25
+    */
     @GetMapping("/todoList")
     List<TaskVO> todoList() {
         List<Task> tasks = taskService.createTaskQuery().taskAssignee(ShiroUtils.getUserId().toString()).list();
