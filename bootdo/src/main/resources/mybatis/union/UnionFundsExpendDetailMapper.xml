@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.union.dao.UnionFundsExpendDetailDao">
+
+	<!--通过records 查询记录的详情-->
+	<select id="listByRecords" resultType="com.bootdo.union.domain.UnionFundsExpendDetailDO">
+		select `id`,`expent_id`,`record_id`,`branch_office`,`amount`,`acount_date`,`item_name`,`number`,`create_time` from union_funds_expend_detail
+		<where>
+			FIND_IN_SET(record_id,#{value})
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.union.domain.UnionFundsExpendDetailDO" useGeneratedKeys="true" keyProperty="id">
+		insert into union_funds_expend_detail
+		(
+			`expent_id`, 
+			`record_id`, 
+			`branch_office`, 
+			`amount`, 
+			`acount_date`, 
+			`item_name`, 
+			`number`, 
+			`create_time`
+		)
+		values
+		(
+			#{expentId}, 
+			#{recordId}, 
+			#{branchOffice}, 
+			#{amount}, 
+			#{acountDate}, 
+			#{itemName}, 
+			#{number}, 
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.union.domain.UnionFundsExpendDetailDO">
+		update union_funds_expend_detail 
+		<set>
+			<if test="expentId != null">`expent_id` = #{expentId}, </if>
+			<if test="recordId != null">`record_id` = #{recordId}, </if>
+			<if test="branchOffice != null">`branch_office` = #{branchOffice}, </if>
+			<if test="amount != null">`amount` = #{amount}, </if>
+			<if test="acountDate != null">`acount_date` = #{acountDate}, </if>
+			<if test="itemName != null">`item_name` = #{itemName}, </if>
+			<if test="number != null">`number` = #{number}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}</if>
+		</set>
+		where record_id = #{recordId}
+	</update>
+
+</mapper>

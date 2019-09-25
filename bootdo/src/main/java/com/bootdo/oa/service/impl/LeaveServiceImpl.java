@@ -125,21 +125,23 @@ public class LeaveServiceImpl implements LeaveService {
     public int update(LeaveDO leave, String taskId) {
 
         String taskKey = taskService.createTaskQuery().taskId(taskId).singleResult().getTaskDefinitionKey();
-        LeaveDO leaveDO = new LeaveDO();
-        switch (taskKey) {
-            case ActivitiConstant.ACTIVITI_PROCESS_LEAVE_DIRECT:
-                leaveDO.setDirectOpinion(leave.getUserOpinion());
-            case ActivitiConstant.ACTIVITI_PROCESS_LEAVE_LEADER:
-                leaveDO.setLeaderOpinion(leave.getUserOpinion());
-            case ActivitiConstant.ACTIVITI_PROCESS_LEAVE_HR:
-                leaveDO.setHrOpinion(leave.getUserOpinion());
-            default:
-        }
-        int r = leaveDao.update(leaveDO);
+//        LeaveDO leaveDO = new LeaveDO();
+//        switch (taskKey) {
+//            case ActivitiConstant.ACTIVITI_PROCESS_UNION_DEPARTMENT_REVIEW:
+//                leaveDO.setDirectOpinion(leave.getUserOpinion());
+//            case ActivitiConstant.ACTIVITI_PROCESS_UNION_SUPERVISOR_APPROVAL:
+//                leaveDO.setLeaderOpinion(leave.getUserOpinion());
+//            case ActivitiConstant.ACTIVITI_PROCESS_UNION_FINANCE_REVIEW:
+//                leaveDO.setHrOpinion(leave.getUserOpinion());
+//            case ActivitiConstant.ACTIVITI_PROCESS_UNION_CASHIER_CONFIRM:
+//                leaveDO.setHrOpinion(leave.getUserOpinion());
+//            default:
+//        }
+//        int r = leaveDao.update(leaveDO);
         actTaskService.complete(taskId, new HashMap<String, Object>() {{
             put("pass", true);
         }});
-        return r;
+        return 1;
     }
 
     @Override

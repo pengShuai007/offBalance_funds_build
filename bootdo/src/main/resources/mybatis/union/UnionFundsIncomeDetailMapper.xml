@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.union.dao.UnionFundsIncomeDetailDao">
+
+
+	<select id="listByRecordIds" resultType="com.bootdo.union.domain.UnionFundsIncomeDetailDO">
+		select `id`,`income_id`,`record_id`,`type`,`description`,`enter_date`,`acount_date`,`amount`,`voucher`,`remarks` from union_funds_income_detail
+		<where>
+			find_in_set(record_id,#{value})
+		</where>
+	</select>
+
+	 
+	<insert id="save" parameterType="com.bootdo.union.domain.UnionFundsIncomeDetailDO" useGeneratedKeys="true" keyProperty="id">
+		insert into union_funds_income_detail
+		(
+			`income_id`, 
+			`record_id`, 
+			`type`, 
+			`description`, 
+			`enter_date`, 
+			`acount_date`, 
+			`amount`, 
+			`voucher`, 
+			`remarks`
+		)
+		values
+		(
+			#{incomeId}, 
+			#{recordId}, 
+			#{type}, 
+			#{description}, 
+			#{enterDate}, 
+			#{acountDate}, 
+			#{amount}, 
+			#{voucher}, 
+			#{remarks}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.union.domain.UnionFundsIncomeDetailDO">
+		update union_funds_income_detail 
+		<set>
+			<if test="incomeId != null">`income_id` = #{incomeId}, </if>
+			<if test="recordId != null">`record_id` = #{recordId}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="description != null">`description` = #{description}, </if>
+			<if test="enterDate != null">`enter_date` = #{enterDate}, </if>
+			<if test="acountDate != null">`acount_date` = #{acountDate}, </if>
+			<if test="amount != null">`amount` = #{amount}, </if>
+			<if test="voucher != null">`voucher` = #{voucher}, </if>
+			<if test="remarks != null">`remarks` = #{remarks}</if>
+		</set>
+		where record_id = #{recordId}
+	</update>
+
+
+</mapper>

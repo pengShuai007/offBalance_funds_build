@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.union.dao.UnionFundsIncomeRecordDao">
+
+	<select id="get" resultType="com.bootdo.union.domain.IncomeRecordVO">
+		select `id`,`record_id`,`in_company_id`,`in_company_name`,`out_company_id`,`out_company_name`,`all_amount`,`Settle_accounts_id`,`creator`,`create_time`,`modifier`,`modify_time` from union_funds_income_record where is_delete = 0 and  record_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.union.domain.IncomeRecordVO">
+		select `id`,`record_id`,`in_company_id`,`in_company_name`,`out_company_id`,`out_company_name`,`all_amount`,`Settle_accounts_id`,`creator`,`create_time`,`modifier`,`modify_time` from union_funds_income_record
+        <where>
+			is_delete = 0
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="recordId != null and recordId != ''"> and record_id = #{recordId} </if>
+		  		  <if test="inCompanyId != null and inCompanyId != ''"> and in_company_id = #{inCompanyId} </if>
+		  		  <if test="inCompanyName != null and inCompanyName != ''"> and in_company_name = #{inCompanyName} </if>
+		  		  <if test="outCompanyId != null and outCompanyId != ''"> and out_company_id = #{outCompanyId} </if>
+		  		  <if test="outCompanyName != null and outCompanyName != ''"> and out_company_name = #{outCompanyName} </if>
+		  		  <if test="allAmount != null and allAmount != ''"> and all_amount = #{allAmount} </if>
+		  		  <if test="settleAccountsId != null and settleAccountsId != ''"> and Settle_accounts_id = #{settleAccountsId} </if>
+		  		  <if test="creator != null and creator != ''"> and creator = #{creator} </if>
+		  		  <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+		  		  <if test="modifier != null and modifier != ''"> and modifier = #{modifier} </if>
+		  		  <if test="modifyTime != null and modifyTime != ''"> and modify_time = #{modifyTime} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by create_time desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from union_funds_income_record
+		 <where>
+			 is_delete = 0
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="recordId != null and recordId != ''"> and record_id = #{recordId} </if>
+		  		  <if test="inCompanyId != null and inCompanyId != ''"> and in_company_id = #{inCompanyId} </if>
+		  		  <if test="inCompanyName != null and inCompanyName != ''"> and in_company_name = #{inCompanyName} </if>
+		  		  <if test="outCompanyId != null and outCompanyId != ''"> and out_company_id = #{outCompanyId} </if>
+		  		  <if test="outCompanyName != null and outCompanyName != ''"> and out_company_name = #{outCompanyName} </if>
+		  		  <if test="allAmount != null and allAmount != ''"> and all_amount = #{allAmount} </if>
+		  		  <if test="settleAccountsId != null and settleAccountsId != ''"> and Settle_accounts_id = #{settleAccountsId} </if>
+		  		  <if test="creator != null and creator != ''"> and creator = #{creator} </if>
+		  		  <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+		  		  <if test="modifier != null and modifier != ''"> and modifier = #{modifier} </if>
+		  		  <if test="modifyTime != null and modifyTime != ''"> and modify_time = #{modifyTime} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.union.domain.UnionFundsIncomeRecordDO" useGeneratedKeys="true" keyProperty="id">
+		insert into union_funds_income_record
+		(
+			`record_id`, 
+			`in_company_id`, 
+			`in_company_name`, 
+			`out_company_id`, 
+			`out_company_name`, 
+			`all_amount`,
+			`Settle_accounts_id`, 
+			`creator`, 
+			`create_time`, 
+			`modifier`, 
+			`modify_time`
+		)
+		values
+		(
+			#{recordId}, 
+			#{inCompanyId}, 
+			#{inCompanyName}, 
+			#{outCompanyId}, 
+			#{outCompanyName}, 
+			#{allAmount},
+			#{settleAccountsId}, 
+			#{creator}, 
+			#{createTime}, 
+			#{modifier}, 
+			#{modifyTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.union.domain.UnionFundsIncomeRecordDO">
+		update union_funds_income_record 
+		<set>
+			<if test="recordId != null">`record_id` = #{recordId}, </if>
+			<if test="inCompanyId != null">`in_company_id` = #{inCompanyId}, </if>
+			<if test="inCompanyName != null">`in_company_name` = #{inCompanyName}, </if>
+			<if test="outCompanyId != null">`out_company_id` = #{outCompanyId}, </if>
+			<if test="outCompanyName != null">`out_company_name` = #{outCompanyName}, </if>
+			<if test="allAmount != null">`all_amount` = #{allAmount}, </if>
+			<if test="settleAccountsId != null">`Settle_accounts_id` = #{settleAccountsId}, </if>
+			<if test="creator != null">`creator` = #{creator}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="modifier != null">`modifier` = #{modifier}, </if>
+			<if test="modifyTime != null">`modify_time` = #{modifyTime}</if>
+		</set>
+		where record_id = #{recordId}
+	</update>
+	
+	<delete id="remove">
+		update union_funds_income_record set is_delete = 1 where record_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		update union_funds_income_record set is_delete = 1 record_id in
+		<foreach item="recordId" collection="array" open="(" separator="," close=")">
+			#{recordId}
+		</foreach>
+	</delete>
+
+</mapper>

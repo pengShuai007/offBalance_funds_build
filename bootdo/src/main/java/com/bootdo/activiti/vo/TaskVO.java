@@ -1,5 +1,8 @@
 package com.bootdo.activiti.vo;
 
+import com.bootdo.union.domain.UnionFundsExpendDetailDO;
+import com.bootdo.union.domain.UnionFundsExpendRecordDO;
+import com.bootdo.union.domain.UnionFundsIncomeRecordDO;
 import org.activiti.engine.task.Task;
 
 /**
@@ -8,7 +11,6 @@ import org.activiti.engine.task.Task;
 public class TaskVO {
 
     public TaskVO(Task task) {
-
         this.setId(task.getId());
         this.setKey(task.getTaskDefinitionKey());
         this.setName(task.getName());
@@ -18,6 +20,7 @@ public class TaskVO {
         this.setProcessId(task.getProcessInstanceId());
         this.setProcessDefinitionId(task.getProcessDefinitionId());
         this.setExecutionId(task.getExecutionId());
+
     }
 
     private String id;

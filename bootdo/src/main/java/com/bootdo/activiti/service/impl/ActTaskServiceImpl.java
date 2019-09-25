@@ -19,10 +19,12 @@ import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskQuery;
 import org.activiti.image.ProcessDiagramGenerator;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,7 +132,7 @@ public class ActTaskServiceImpl implements ActTaskService {
      */
     @Override
     public ProcessInstance startProcess(String procDefKey, String businessId, String title, Map<String, Object> vars) {
-        String userId = ShiroUtils.getUserId().toString();//ObjectUtils.toString(UserUtils.getUser().getId())
+        String userId = ShiroUtils.getUserId().toString();
         // 用来设置启动流程的人员ID，引擎会自动把用户ID保存到activiti:initiator中
         identityService.setAuthenticatedUserId(userId);
         // 设置流程变量
@@ -144,16 +146,9 @@ public class ActTaskServiceImpl implements ActTaskService {
         List<Task> lbefores = taskService.createTaskQuery().processDefinitionKey(procDefKey).list();
         // 启动流程
         ProcessInstance procIns = runtimeService.startProcessInstanceByKey(procDefKey, businessId, vars);
-        this.setAssignee(ActivitiConstant.ACTIVITI_PROCESS_LEAVE);
-        List<Task> lafters = taskService.createTaskQuery().processDefinitionKey(procDefKey).list();
-        lafters.stream().filter(lafter ->
-                lbefores.stream().noneMatch(lbefore ->
-                        lbefore.getId().equals(lafter.getId())
-                )
-        ).forEach(task1 -> {
-            //发待办通知等
-            template.convertAndSendToUser(userDao.get(Long.valueOf(task1.getAssignee())).toString(), "/queue/notifications", "新待办：" + task1.getName());
-        });
+        this.setAssignee(ActivitiConstant.ACTIVITI_PROCESS_UNION);
+        List<Task> lafters1 = taskService.createTaskQuery().processInstanceId(procIns.getId()).taskDefinitionKey(ActivitiConstant.ACTIVITI_PROCESS_UNION_DEPARTMENT_REVIEW).list();
+        //template.convertAndSendToUser(userDao.get(Long.valueOf(task1.getAssignee())).toString(), "/queue/notifications", "新待办：" + task1.getName());
         return procIns;
     }
 
