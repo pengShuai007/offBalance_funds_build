@@ -54,19 +54,19 @@ public class UserDO implements Serializable {
     //所在地区
     private String district;
     //行政组织编码
-    private String adminOrgCode;
+    private Long adminOrgCode;
     //行政组织
     private String adminOrgName;
     //党组织编码
-    private String partyOrgCode;
+    private Long partyOrgCode;
     //党组织名称
     private String partyOrgName;
     //团组织编码
-    private String communistOrgCode;
+    private Long communistOrgCode;
     //团组织名称
     private String communistOrgName;
     //工会组织编码
-    private String tradeUnionCode;
+    private Long tradeUnionCode;
     // 工会组织名称
     private String tradeUnionName;
     //职务名称
@@ -82,7 +82,7 @@ public class UserDO implements Serializable {
     //更新人
     private String updater;
     //公司ID
-    private int companyId;
+    private Long companyId;
     //协同系统用户ID
     private Long XtUserId;
 
@@ -262,11 +262,11 @@ public class UserDO implements Serializable {
         this.roleSigns = roleSigns;
     }
 
-    public String getAdminOrgCode() {
+    public Long getAdminOrgCode() {
         return adminOrgCode;
     }
 
-    public void setAdminOrgCode(String adminOrgCode) {
+    public void setAdminOrgCode(Long adminOrgCode) {
         this.adminOrgCode = adminOrgCode;
     }
 
@@ -278,11 +278,11 @@ public class UserDO implements Serializable {
         this.adminOrgName = adminOrgName;
     }
 
-    public String getPartyOrgCode() {
+    public Long getPartyOrgCode() {
         return partyOrgCode;
     }
 
-    public void setPartyOrgCode(String partyOrgCode) {
+    public void setPartyOrgCode(Long partyOrgCode) {
         this.partyOrgCode = partyOrgCode;
     }
 
@@ -294,11 +294,11 @@ public class UserDO implements Serializable {
         this.partyOrgName = partyOrgName;
     }
 
-    public String getCommunistOrgCode() {
+    public Long getCommunistOrgCode() {
         return communistOrgCode;
     }
 
-    public void setCommunistOrgCode(String communistOrgCode) {
+    public void setCommunistOrgCode(Long communistOrgCode) {
         this.communistOrgCode = communistOrgCode;
     }
 
@@ -310,11 +310,11 @@ public class UserDO implements Serializable {
         this.communistOrgName = communistOrgName;
     }
 
-    public String getTradeUnionCode() {
+    public Long getTradeUnionCode() {
         return tradeUnionCode;
     }
 
-    public void setTradeUnionCode(String tradeUnionCode) {
+    public void setTradeUnionCode(Long tradeUnionCode) {
         this.tradeUnionCode = tradeUnionCode;
     }
 
@@ -374,11 +374,11 @@ public class UserDO implements Serializable {
         this.updater = updater;
     }
 
-    public int getCompanyId() {
+    public Long getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(int companyId) {
+    public void setCompanyId(Long companyId) {
         this.companyId = companyId;
     }
 

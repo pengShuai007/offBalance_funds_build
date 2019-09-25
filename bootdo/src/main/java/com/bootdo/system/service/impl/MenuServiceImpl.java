@@ -1,5 +1,6 @@
 package com.bootdo.system.service.impl;
 
+import com.bootdo.common.domain.MenuTree;
 import com.bootdo.common.domain.Tree;
 import com.bootdo.common.utils.BuildTree;
 import com.bootdo.system.dao.MenuDao;
@@ -157,6 +158,28 @@ public class MenuServiceImpl implements MenuService {
 		}
 		// 默认顶级菜单为０，根据数据库实际情况调整
 		List<Tree<MenuDO>> list = BuildTree.buildList(trees, "0");
+		return list;
+	}
+
+	@Override
+	public List<MenuTree<MenuDO>> listMenuTreeOther(Long id) {
+		List<MenuTree<MenuDO>> trees = new ArrayList<MenuTree<MenuDO>>();
+		List<MenuDO> menuDOs = menuMapper.listMenuByUserId(id);
+		for (MenuDO sysMenuDO : menuDOs) {
+			MenuTree<MenuDO> tree = new MenuTree<MenuDO>();
+			tree.setId(sysMenuDO.getMenuId().toString());
+			tree.setParentId(sysMenuDO.getParentId().toString());
+			tree.setTitle(sysMenuDO.getName());
+			Map<String, Object> attributes = new HashMap<>(16);
+			/*attributes.put("jump", sysMenuDO.getUrl());
+			attributes.put("icon", sysMenuDO.getIcon());*/
+			tree.setJump(sysMenuDO.getUrl());
+			tree.setIcon(sysMenuDO.getIcon());
+			tree.setAttributes(attributes);
+			trees.add(tree);
+		}
+		// 默认顶级菜单为０，根据数据库实际情况调整
+		List<MenuTree<MenuDO>> list = BuildTree.buildMenuList(trees, "0");
 		return list;
 	}
 
