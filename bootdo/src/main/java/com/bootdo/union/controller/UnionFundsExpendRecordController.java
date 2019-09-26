@@ -89,16 +89,6 @@ public class UnionFundsExpendRecordController {
 	}
 
 	/**
-	 * 删除
-	 */
-	@PostMapping( "/batchRemove")
-	@ResponseBody
-	public R remove(@RequestParam("ids[]") String[] recordIds){
-		unionFundsExpendRecordService.batchRemove(recordIds);
-		return R.ok();
-	}
-
-	/**
 	 * @Description: 查询工会资金的代办列表
 	 * @Param:
 	 * @return:

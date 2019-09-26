@@ -109,17 +109,6 @@ public class UnionFundsIncomeRecordController {
 
 		return result;
 	}
-	
 
-	
-	/**
-	 * 删除
-	 */
-	@PostMapping( "/batchRemove")
-	@ResponseBody
-	public R remove(@RequestParam("ids[]") Long[] ids){
-		unionFundsIncomeRecordService.batchRemove(ids);
-		return R.ok();
-	}
 	
 }
