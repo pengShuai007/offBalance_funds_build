@@ -238,4 +238,32 @@ public class UserController extends BaseController {
             return R.error("更新图像失败！");
         }
     }
+
+
+    @ResponseBody
+    @PostMapping("/batchUpdatePwd")
+    R batchUpdatePwd(@RequestParam Map<String, Object> params) {
+
+        try {
+            Query query = new Query(params);
+            List<UserDO> sysUserList = userService.list(query);
+            int total = userService.count(query);
+            for(UserDO entity : sysUserList){
+                if(!"admin".equals(entity.getUsername())
+                        && !"test".equals(entity.getUsername())
+                        && !"lh".equals(entity.getUsername())
+                        && !"lyf".equals(entity.getUsername())
+                        && !"ldh".equals(entity.getUsername()) ){
+                    UserVO userVO = new UserVO();
+                    userVO.setUserDO(entity);
+                    userVO.setPwdNew("sxdqtv2@2019");
+                    userService.adminResetPwd(userVO);
+                }
+            }
+            return R.ok();
+        } catch (Exception e) {
+            return R.error(1, e.getMessage());
+        }
+
+    }
 }
