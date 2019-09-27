@@ -47,7 +47,7 @@ public class UnionFundsIncomeRecordController {
 		}else if(params.containsKey("limit") && StringUtils.isEmpty((String) params.get("limit"))){
 			params.put("limit",20);
 		}
-		params.put("outCompanyId", ShiroUtils.getUser().getCompanyId());
+		params.put("inCompanyId", ShiroUtils.getUser().getCompanyId());
 		Query query = new Query(params);
 		List<IncomeRecordVO> incomeRecordVOS = unionFundsIncomeRecordService.list(query);
 		int total = unionFundsIncomeRecordService.count(query);
