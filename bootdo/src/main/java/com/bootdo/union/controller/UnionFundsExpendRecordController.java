@@ -38,16 +38,16 @@ public class UnionFundsExpendRecordController {
 	@GetMapping("/list")
 	public PageUtils list(@RequestParam Map<String, Object> params){
 		//查询列表数据
-		if(!params.containsKey("offset")){
-			params.put("offset",0);
-		}else if(params.containsKey("offset") && StringUtils.isEmpty((String) params.get("offset"))){
-			params.put("offset",0);
-		}
-		if(!params.containsKey("limit")){
-			params.put("limit",20);
-		}else if(params.containsKey("limit") && StringUtils.isEmpty((String) params.get("limit"))){
-			params.put("limit",20);
-		}
+//		if(!params.containsKey("offset")){
+//			params.put("offset",0);
+//		}else if(params.containsKey("offset") && StringUtils.isEmpty((String) params.get("offset"))){
+//			params.put("offset",0);
+//		}
+//		if(!params.containsKey("limit")){
+//			params.put("limit",20);
+//		}else if(params.containsKey("limit") && StringUtils.isEmpty((String) params.get("limit"))){
+//			params.put("limit",20);
+//		}
 		params.put("outCompanyId", ShiroUtils.getUser().getCompanyId());
 		Query query = new Query(params);
 		List<ExpendRecordVO> unionFundsExpendRecordList = unionFundsExpendRecordService.list(query);
