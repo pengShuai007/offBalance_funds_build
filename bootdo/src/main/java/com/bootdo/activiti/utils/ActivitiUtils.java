@@ -1,6 +1,7 @@
 package com.bootdo.activiti.utils;
 
 import com.bootdo.common.utils.BDException;
+import com.bootdo.common.utils.ShiroUtils;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -43,5 +44,15 @@ public class ActivitiUtils {
                 .taskId(taskId)
                 .singleResult();
         return task;
+    }
+
+    // 给任务增加用户组
+    public void addGroupToTask(Task task){
+        taskService.addCandidateGroup(task.getId(), ShiroUtils.getUser().getCompanyId()+"@"+task.getTaskDefinitionKey());
+    }
+
+    // 过去用户的id
+    public String getActivitiUserId(){
+        return ShiroUtils.getUser().getCompanyId()+"@"+ShiroUtils.getUser().getUserId();
     }
 }

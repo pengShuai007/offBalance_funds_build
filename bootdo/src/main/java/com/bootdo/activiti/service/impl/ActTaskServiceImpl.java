@@ -143,12 +143,8 @@ public class ActTaskServiceImpl implements ActTaskService {
         if (StringUtils.isNotBlank(title)) {
             vars.put("title", title);
         }
-        List<Task> lbefores = taskService.createTaskQuery().processDefinitionKey(procDefKey).list();
-        // 启动流程
+
         ProcessInstance procIns = runtimeService.startProcessInstanceByKey(procDefKey, businessId, vars);
-        this.setAssignee(ActivitiConstant.ACTIVITI_PROCESS_UNION);
-        List<Task> lafters1 = taskService.createTaskQuery().processInstanceId(procIns.getId()).taskDefinitionKey(ActivitiConstant.ACTIVITI_PROCESS_UNION_DEPARTMENT_REVIEW).list();
-        //template.convertAndSendToUser(userDao.get(Long.valueOf(task1.getAssignee())).toString(), "/queue/notifications", "新待办：" + task1.getName());
         return procIns;
     }
 

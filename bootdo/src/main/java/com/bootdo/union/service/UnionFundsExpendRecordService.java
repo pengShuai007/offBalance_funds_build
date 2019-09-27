@@ -28,7 +28,7 @@ public interface UnionFundsExpendRecordService {
 	
 	int batchRemove(String[] ids);
 
-    void update(UnionFundsExpendRecordDO unionFundsExpendRecord);
+    void update(UnionFundsExpendRecordDO unionFundsExpendRecord, String operateStatus);
 
 	List<ExpendRecordVO> todoList();
 

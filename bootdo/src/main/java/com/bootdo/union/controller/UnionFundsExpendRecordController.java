@@ -1,9 +1,6 @@
 package com.bootdo.union.controller;
 
-import com.bootdo.common.utils.PageUtils;
-import com.bootdo.common.utils.Query;
-import com.bootdo.common.utils.R;
-import com.bootdo.common.utils.StringUtils;
+import com.bootdo.common.utils.*;
 import com.bootdo.union.domain.ExpendRecordVO;
 import com.bootdo.union.domain.UnionFundsExpendDetailDO;
 import com.bootdo.union.domain.UnionFundsExpendRecordDO;
@@ -51,8 +48,8 @@ public class UnionFundsExpendRecordController {
 		}else if(params.containsKey("limit") && StringUtils.isEmpty((String) params.get("limit"))){
 			params.put("limit",20);
 		}
-
-        Query query = new Query(params);
+		params.put("outCompanyId", ShiroUtils.getUser().getCompanyId());
+		Query query = new Query(params);
 		List<ExpendRecordVO> unionFundsExpendRecordList = unionFundsExpendRecordService.list(query);
 		int total = unionFundsExpendRecordService.count(query);
 		PageUtils pageUtils = new PageUtils(unionFundsExpendRecordList, total);
@@ -60,7 +57,7 @@ public class UnionFundsExpendRecordController {
 	}
 
 	/** 
-	* @Description: 保存支持记录，如果是向下级工会拨付的，需要走工作流
+	* @Description: 工会资金支出流程。
 	* @Param:  
 	* @return:  
 	* @Author: quxuan 
@@ -83,9 +80,16 @@ public class UnionFundsExpendRecordController {
 	*/
 	@ResponseBody
 	@RequestMapping("/update")
-	public R update( UnionFundsExpendRecordDO unionFundsExpendRecord) {
-		unionFundsExpendRecordService.update(unionFundsExpendRecord);
-		return R.ok();
+	public R update( UnionFundsExpendRecordDO unionFundsExpendRecord,String operateStatus) {
+		if(StringUtils.isEmpty(operateStatus)){
+			return R.error(1,"operateStatus 操作状态不呢为空");
+		}else if("OK".equals(operateStatus) || "NO".equals(operateStatus) ){
+			unionFundsExpendRecordService.update(unionFundsExpendRecord,operateStatus);
+			return R.ok();
+		}else {
+			return R.error(2,"operateStatus ："+operateStatus+" 不在流程判断范围内");
+		}
+
 	}
 
 	/**

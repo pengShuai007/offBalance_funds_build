@@ -93,77 +93,122 @@ public class UnionFundsExpendRecordServiceImpl implements UnionFundsExpendRecord
 	@Override
 	public int save(UnionFundsExpendRecordDO unionFundsExpendRecord, UnionFundsExpendDetailDO detailDO){
 
-		//保存支持记录
-		unionFundsExpendRecord.setRecordId(UUIDUtils.randomUUID());
-		unionFundsExpendRecord.setApplyTime(new Date());
-		unionFundsExpendRecord.setCreateTime(new Date());
-		int r = unionFundsExpendRecordDao.save(unionFundsExpendRecord);
-		//保存支出明细
-		detailDO.setExpentId(UUIDUtils.randomUUID());
-		detailDO.setRecordId(unionFundsExpendRecord.getRecordId());
-		detailDO.setCreateTime(new Date());
-		int d = unionFundsExpendDetailDao.save(detailDO);
-
-		// 向下级工会拨付走工作流，
-		if(unionFundsExpendRecord.getType().equals("向下级工会拨付")){
+		// 判断之前操作的流程
+		if(StringUtils.isEmpty(unionFundsExpendRecord.getRecordId())){
 			Map vars = new HashMap();
 			String title = ShiroUtils.getUser().getName() + "发起工会资金支出申请";
 			vars.put("title", title);
-			//开启工作流
+			//开启工作流  传入流程的标识 , 业务主键 , 标题
 			ProcessInstance processInstance = actTaskService.startProcess(ActivitiConstant.ACTIVITI_PROCESS_UNION, unionFundsExpendRecord.getRecordId(), title,
 					vars);
-			//更新代办状态
-			List<Task> nextTask = taskService.createTaskQuery().processInstanceId(processInstance.getId()).taskDefinitionKey(ActivitiConstant.ACTIVITI_PROCESS_UNION_DEPARTMENT_REVIEW).list();
-			unionFundsExpendRecord.setActivitiStatus(nextTask.get(0).getTaskDefinitionKey());
+			// 办理支出申请任务
+			Task applyTask = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
+			applyTask.setAssignee(ShiroUtils.getUser().getUserId().toString());
+			taskService.complete(applyTask.getId());
+
+			// 分配用户组
+			Task nextTask = taskService.createTaskQuery()
+					.processInstanceId(processInstance.getId())
+					.singleResult();
+			activitiUtils.addGroupToTask(nextTask);
+
+			//保存支持记录
+			unionFundsExpendRecord.setRecordId(UUIDUtils.randomUUID());
+			unionFundsExpendRecord.setApplyTime(new Date());
+			unionFundsExpendRecord.setCreateTime(new Date());
+			unionFundsExpendRecord.setActivitiStatus(nextTask.getTaskDefinitionKey());
 			unionFundsExpendRecord.setProcessInstanceId(processInstance.getId());
+			int r = unionFundsExpendRecordDao.save(unionFundsExpendRecord);
+			//保存支出明细
+			detailDO.setExpentId(UUIDUtils.randomUUID());
+			detailDO.setRecordId(unionFundsExpendRecord.getRecordId());
+			detailDO.setCreateTime(new Date());
+			int d = unionFundsExpendDetailDao.save(detailDO);
+
+			return r;
+		}else {
+			// 如果是操作的流程，判断是否有流程定义，没有进行查询
+			if(StringUtils.isEmpty(unionFundsExpendRecord.getProcessInstanceId())){
+				ExpendRecordVO  old = unionFundsExpendRecordDao.get(unionFundsExpendRecord.getRecordId());
+				// 如果还没有查到流程定义直接返回
+				if(StringUtils.isEmpty(old.getProcessInstanceId())){
+					return 0;
+				}
+				unionFundsExpendRecord.setProcessInstanceId(old.getProcessInstanceId());
+			}
+			// 直接办理下一个任务
+			Task applyTask = taskService.createTaskQuery().processInstanceId(unionFundsExpendRecord.getProcessInstanceId()).singleResult();
+			applyTask.setAssignee(ShiroUtils.getUser().getUsername());
+			taskService.complete(applyTask.getId());
+
+			// 分配用户组
+			Task nextTask = taskService.createTaskQuery()
+					.processInstanceId(unionFundsExpendRecord.getProcessInstanceId())
+					.singleResult();
+			activitiUtils.addGroupToTask(nextTask);
+			unionFundsExpendRecord.setActivitiStatus(nextTask.getTaskDefinitionKey());
 			unionFundsExpendRecordDao.update(unionFundsExpendRecord);
+			return 1;
 		}
-		return r;
+
 	}
 
 
 
 	@Override
-	public void update(UnionFundsExpendRecordDO unionFundsExpendRecord){
-		List<Task> currentTask = taskService.createTaskQuery().processInstanceBusinessKey(unionFundsExpendRecord.getRecordId()).taskDefinitionKey(unionFundsExpendRecord.getActivitiStatus()).list();
-		if(currentTask.size() < 1){
-			return;
+	public void update(UnionFundsExpendRecordDO unionFundsExpendRecord, String operateStatus){
+
+		Map var = new HashMap();
+		Task currentTask = taskService.createTaskQuery().processInstanceId(unionFundsExpendRecord.getProcessInstanceId()).taskCandidateUser(activitiUtils.getActivitiUserId()).singleResult();
+		if(null == currentTask){
+			return ;
 		}
 		switch (unionFundsExpendRecord.getActivitiStatus()) {
             case ActivitiConstant.ACTIVITI_PROCESS_UNION_DEPARTMENT_REVIEW:
-				unionFundsExpendRecord.setActivitiStatus(ActivitiConstant.ACTIVITI_PROCESS_UNION_SUPERVISOR_APPROVAL);
 				if(StringUtils.isEmpty(unionFundsExpendRecord.getDepartmentReview())){
-					unionFundsExpendRecord.setDepartmentReview("部门领导审核通过");
+					unionFundsExpendRecord.setDepartmentReview(operateStatus);
 				}
+				var.put("deptartmentOP",operateStatus);
 				break;
             case ActivitiConstant.ACTIVITI_PROCESS_UNION_SUPERVISOR_APPROVAL:
-				unionFundsExpendRecord.setActivitiStatus(ActivitiConstant.ACTIVITI_PROCESS_UNION_FINANCE_REVIEW);
 				if(StringUtils.isEmpty(unionFundsExpendRecord.getSupervisorApproval())){
-					unionFundsExpendRecord.setSupervisorApproval("主管领导审批通过");
+					unionFundsExpendRecord.setSupervisorApproval(operateStatus);
 				}
+				var.put("supervisorOP",operateStatus);
 				break;
             case ActivitiConstant.ACTIVITI_PROCESS_UNION_FINANCE_REVIEW:
-				unionFundsExpendRecord.setActivitiStatus(ActivitiConstant.ACTIVITI_PROCESS_UNION_CASHIER_CONFIRM);
 				if(StringUtils.isEmpty(unionFundsExpendRecord.getFinanceReview())){
-					unionFundsExpendRecord.setFinanceReview("财务审核通过");
+					unionFundsExpendRecord.setFinanceReview(operateStatus);
 				}
+				var.put("financeOP",operateStatus);
 				break;
             case ActivitiConstant.ACTIVITI_PROCESS_UNION_CASHIER_CONFIRM:
-				unionFundsExpendRecord.setActivitiStatus("union_funds_end");
 				if(StringUtils.isEmpty(unionFundsExpendRecord.getCashierConfirm())){
-					unionFundsExpendRecord.setCashierConfirm("出纳已确认");
+					unionFundsExpendRecord.setCashierConfirm(operateStatus);
 				}
 				//工作流结束，创建分公司收入记录
-				createUnionFundsIncomeRecord(unionFundsExpendRecord);
+				ExpendRecordVO expendRecordVO= unionFundsExpendRecordDao.get(unionFundsExpendRecord.getRecordId());
+
+				if(StringUtils.isNotEmpty(expendRecordVO.getOutCompanyId())){
+					createUnionFundsIncomeRecord(expendRecordVO);
+				}
 				break;
             default:
         }
-        // 更新操作下一个状态
-        int r = unionFundsExpendRecordDao.update(unionFundsExpendRecord);
+
 		// 办理任务
-		actTaskService.complete(currentTask.get(0).getId(), new HashMap<String, Object>() {{
-			put("pass", true);
-		}});
+		taskService.complete(currentTask.getId(), var);
+
+		// 下一个任务,并分配用户组
+		Task nextTask = taskService.createTaskQuery().processInstanceId(currentTask.getProcessInstanceId()).singleResult();
+		if(null != nextTask){
+			activitiUtils.addGroupToTask(nextTask);
+
+			//更新数据库状态
+			unionFundsExpendRecord.setActivitiStatus(nextTask.getTaskDefinitionKey());
+			unionFundsExpendRecordDao.update(unionFundsExpendRecord);
+		}
+
 	}
 
 	/**
@@ -175,31 +220,34 @@ public class UnionFundsExpendRecordServiceImpl implements UnionFundsExpendRecord
 	*/
 	@Override
 	public List<ExpendRecordVO> todoList() {
-		List<Task> tasks = taskService.createTaskQuery().taskAssignee(ShiroUtils.getUserId().toString()).list();
+		List<Task> tasks = taskService.createTaskQuery().taskCandidateUser(activitiUtils.getActivitiUserId()).list();
 		StringBuilder processInstanceIds = new StringBuilder("");
 		if(tasks.size() < 1){
 			return new ArrayList<>();
 		}else {
-			tasks.stream().filter(task -> !task.getTaskDefinitionKey().equals(ActivitiConstant.ACTIVITI_PROCESS_UNION_END)).forEach(task -> {
+			tasks.stream().forEach(task -> {
 				if(StringUtils.isNotEmpty(processInstanceIds)){
 					processInstanceIds.append(","+task.getProcessInstanceId());
 				}else {
 					processInstanceIds.append(task.getProcessInstanceId());
 				}
 			});
-			Map paramsMap = new HashMap();
-			paramsMap.put("processInstanceIds",processInstanceIds);
 			if(StringUtils.isEmpty(processInstanceIds)){
 				return new ArrayList<>();
 			}
 
+			Map query = new HashMap();
+			query.put("processInstanceIds",processInstanceIds.toString());
+			query.put("outCompanyId",ShiroUtils.getUser().getCompanyId()); // 当前用户id
+
 			//支出记录，如果为空直接返回
-			List<ExpendRecordVO> expendRecordDOList = unionFundsExpendRecordDao.todoList(processInstanceIds.toString()).stream()
-					.filter(record->!record.getActivitiStatus().equals(ActivitiConstant.ACTIVITI_PROCESS_UNION_END)).collect(Collectors.toList());
+			List<ExpendRecordVO> expendRecordDOList = unionFundsExpendRecordDao.todoList(query).stream()
+					.collect(Collectors.toList());
 
 			if(CollectionUtils.isEmpty(expendRecordDOList)){
 				return new ArrayList<>();
 			}
+
 			// 查询支出激励详情
 			StringBuilder recordIds = new StringBuilder("");
 			expendRecordDOList.stream()
@@ -227,27 +275,30 @@ public class UnionFundsExpendRecordServiceImpl implements UnionFundsExpendRecord
 	*/
 	@Override
 	public List<ExpendRecordVO> historyTask() {
-		List<HistoricTaskInstance> tasks = historyService.createHistoricTaskInstanceQuery().
-				taskAssignee(ShiroUtils.getUserId().toString()).list();
+		List<HistoricTaskInstance> tasks = historyService.createHistoricTaskInstanceQuery().taskCandidateUser(activitiUtils.getActivitiUserId()).list();
 		StringBuilder processInstanceIds = new StringBuilder("");
 		if(tasks.size() < 1){
 			return new ArrayList<>();
 		}else {
-			tasks.stream().filter(task -> !task.getTaskDefinitionKey().equals(ActivitiConstant.ACTIVITI_PROCESS_UNION_END)).forEach(task -> {
+			tasks.stream().forEach(task -> {
 				if(StringUtils.isNotEmpty(processInstanceIds)){
 					processInstanceIds.append(","+task.getProcessInstanceId());
 				}else {
 					processInstanceIds.append(task.getProcessInstanceId());
 				}
 			});
-			Map paramsMap = new HashMap();
-			paramsMap.put("processInstanceIds",processInstanceIds);
+
 			if(StringUtils.isEmpty(processInstanceIds)){
 				return new ArrayList<>();
 			}
+
+			Map query = new HashMap();
+			query.put("processInstanceIds",processInstanceIds.toString());
+			query.put("outCompanyId",ShiroUtils.getUser().getCompanyId()); // 当前用户id
+
 			//支出记录，如果为空直接返回
-			List<ExpendRecordVO> expendRecordDOList = unionFundsExpendRecordDao.todoList(processInstanceIds.toString()).stream()
-					.filter(record->record.getActivitiStatus().equals(ActivitiConstant.ACTIVITI_PROCESS_UNION_END)).collect(Collectors.toList());
+			List<ExpendRecordVO> expendRecordDOList = unionFundsExpendRecordDao.todoList(query).stream()
+					.collect(Collectors.toList());
 
 			if(CollectionUtils.isEmpty(expendRecordDOList)){
 				return new ArrayList<>();
@@ -286,7 +337,7 @@ public class UnionFundsExpendRecordServiceImpl implements UnionFundsExpendRecord
 	* @Author: quxuan
 	* @Date: 2019/9/25
 	*/
-	private void createUnionFundsIncomeRecord(UnionFundsExpendRecordDO unionFundsExpendRecord) {
+	private void createUnionFundsIncomeRecord(ExpendRecordVO unionFundsExpendRecord) {
 		// 查询支出记录信息
 		ExpendRecordVO fundsExpendRecordDO = unionFundsExpendRecordDao.get(unionFundsExpendRecord.getRecordId());
 

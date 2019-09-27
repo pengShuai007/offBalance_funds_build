@@ -1,9 +1,6 @@
 package com.bootdo.union.controller;
 
-import com.bootdo.common.utils.PageUtils;
-import com.bootdo.common.utils.Query;
-import com.bootdo.common.utils.R;
-import com.bootdo.common.utils.StringUtils;
+import com.bootdo.common.utils.*;
 import com.bootdo.union.dao.UnionFundsIncomeDetailDao;
 import com.bootdo.union.domain.ExpendRecordVO;
 import com.bootdo.union.domain.IncomeRecordVO;
@@ -50,7 +47,8 @@ public class UnionFundsIncomeRecordController {
 		}else if(params.containsKey("limit") && StringUtils.isEmpty((String) params.get("limit"))){
 			params.put("limit",20);
 		}
-        Query query = new Query(params);
+		params.put("outCompanyId", ShiroUtils.getUser().getCompanyId());
+		Query query = new Query(params);
 		List<IncomeRecordVO> incomeRecordVOS = unionFundsIncomeRecordService.list(query);
 		int total = unionFundsIncomeRecordService.count(query);
 		PageUtils pageUtils = new PageUtils(incomeRecordVOS, total);
