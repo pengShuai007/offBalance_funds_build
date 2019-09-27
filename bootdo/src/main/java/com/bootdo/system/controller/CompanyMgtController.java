@@ -1,8 +1,10 @@
 package com.bootdo.system.controller;
 
+import com.bootdo.common.controller.BaseController;
 import com.bootdo.common.utils.PageUtils;
 import com.bootdo.common.utils.Query;
 import com.bootdo.common.utils.R;
+import com.bootdo.system.dao.CompanyMgtDao;
 import com.bootdo.system.domain.CompanyMgtDO;
 import com.bootdo.system.service.CompanyMgtService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -24,10 +26,13 @@ import java.util.Map;
  
 @Controller
 @RequestMapping("/system/companyMgt")
-public class CompanyMgtController {
+public class CompanyMgtController extends BaseController {
 	@Autowired
 	private CompanyMgtService companyMgtService;
-	
+
+	@Autowired
+	private CompanyMgtDao companyMgtDao;
+
 	@GetMapping()
 	@RequiresPermissions("system:companyMgt:companyMgt")
 	String CompanyMgt(){
@@ -106,5 +111,11 @@ public class CompanyMgtController {
 		companyMgtService.batchRemove(ids);
 		return R.ok();
 	}
-	
+
+	@GetMapping( "/getCurrentUserCompanyInfo")
+	@ResponseBody
+	public CompanyMgtDO getCurrentUserCompanyInfo(){
+		CompanyMgtDO companyMgtDO = companyMgtDao.get(getUserId().intValue());
+		return companyMgtDO;
+	}
 }
