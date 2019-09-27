@@ -3,6 +3,7 @@ package com.bootdo.system.controller;
 import com.bootdo.common.annotation.Log;
 import com.bootdo.common.config.Constant;
 import com.bootdo.common.controller.BaseController;
+import com.bootdo.common.utils.Query;
 import com.bootdo.common.utils.R;
 import com.bootdo.system.domain.RoleDO;
 import com.bootdo.system.service.RoleService;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/sys/role")
 @Controller
@@ -109,5 +111,13 @@ public class RoleController extends BaseController {
 			return R.ok();
 		}
 		return R.error();
+	}
+
+	@GetMapping("/listWithParam")
+	@ResponseBody()
+	List<RoleDO> listWithParam(@RequestParam Map<String, Object> params) {
+		Query query = new Query(params);
+		List<RoleDO> roles = roleService.listWithParam(query);
+		return roles;
 	}
 }
