@@ -1,10 +1,10 @@
 package com.bootdo.system.service;
 
-import java.util.List;
-
+import com.bootdo.system.domain.RoleDO;
 import org.springframework.stereotype.Service;
 
-import com.bootdo.system.domain.RoleDO;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public interface RoleService {
@@ -22,4 +22,6 @@ public interface RoleService {
 	List<RoleDO> list(Long userId);
 
 	int batchremove(Long[] ids);
+
+	List<RoleDO> listWithParam(Map<String, Object> params);
 }
