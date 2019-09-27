@@ -3,8 +3,10 @@ package com.bootdo.system.controller;
 import com.bootdo.common.annotation.Log;
 import com.bootdo.common.config.Constant;
 import com.bootdo.common.controller.BaseController;
+import com.bootdo.common.domain.MenuTree;
 import com.bootdo.common.domain.Tree;
 import com.bootdo.common.utils.R;
+import com.bootdo.common.utils.ReturnUtils;
 import com.bootdo.system.domain.MenuDO;
 import com.bootdo.system.service.MenuService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -39,6 +41,16 @@ public class MenuController extends BaseController {
 		List<MenuDO> menus = menuService.list(params);
 		return menus;
 	}
+
+	/*@RequiresPermissions("sys:menu:menu")
+	@RequestMapping("/bwzjlist")
+	@ResponseBody
+	ReturnUtils bwzjlist(@RequestParam Map<String, Object> params) {
+		List<MenuDO> menus = menuService.list(params);
+		ReturnUtils result = new ReturnUtils();
+		result.seccessReturn(JSONUtils.beanToJson(menus),"获取菜单成功");
+		return result;
+	}*/
 
 	@Log("添加菜单")
 	@RequiresPermissions("sys:menu:add")
@@ -127,4 +139,27 @@ public class MenuController extends BaseController {
 		Tree<MenuDO> tree = menuService.getTree(roleId);
 		return tree;
 	}
+
+	/*@GetMapping("/getMenuTreeByUserId")
+	@ResponseBody
+	List<Tree<MenuDO>> getMenuTreeByUserId(){
+		List<Tree<MenuDO>> menus = menuService.listMenuTree(getUserId());
+		return menus;
+	}*/
+
+	@GetMapping("/getMenuTreeByUserId")
+	@ResponseBody
+	ReturnUtils getMenuTreeByUserId(){
+		ReturnUtils result = new ReturnUtils();
+		List<MenuTree<MenuDO>> menus = null;
+		try{
+			menus = menuService.listMenuTreeOther(getUserId());
+		}catch (Throwable e){
+			result.failReturn("获取菜单失败");
+		}
+		//String data = JSONUtils.beanToJson(menus);
+		result.seccessReturn(menus,"查询成功");
+		return result;
+	}
+
 }

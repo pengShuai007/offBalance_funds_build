@@ -153,6 +153,14 @@ public class DeptController extends BaseController {
 		return tree;
 	}
 
+	@GetMapping("/companyAndDeptTree")
+	@ResponseBody
+	public Tree<DeptDO> companyAndDeptTree() {
+		Tree<DeptDO> tree = new Tree<DeptDO>();
+		tree = sysDeptService.getCompanyAndDeptTree();
+		return tree;
+	}
+
 	@GetMapping("/treeView")
 	String treeView() {
 		return  prefix + "/deptTree";

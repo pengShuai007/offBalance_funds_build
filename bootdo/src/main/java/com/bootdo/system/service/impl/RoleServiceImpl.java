@@ -1,16 +1,5 @@
 package com.bootdo.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.bootdo.system.dao.RoleDao;
 import com.bootdo.system.dao.RoleMenuDao;
 import com.bootdo.system.dao.UserDao;
@@ -18,6 +7,11 @@ import com.bootdo.system.dao.UserRoleDao;
 import com.bootdo.system.domain.RoleDO;
 import com.bootdo.system.domain.RoleMenuDO;
 import com.bootdo.system.service.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 
 @Service
@@ -118,4 +112,9 @@ public class RoleServiceImpl implements RoleService {
         return r;
     }
 
+    @Override
+    public List<RoleDO> listWithParam(Map<String, Object> params) {
+        List<RoleDO> roles = roleMapper.listWithParam(params);
+        return roles;
+    }
 }

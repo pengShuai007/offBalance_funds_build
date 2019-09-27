@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.system.dao.CommunistOrgMgtDao">
+
+	<select id="get" resultType="com.bootdo.system.domain.CommunistOrgMgtDO">
+		select `ID`,`ORG_CODE`,`ORG_NAME`,`PARENT_ID`,`COMMUNIST_STATE`,`CREATE_TIME`,`CREATOR`,`UPDATE_TIME`,`UPDATER` from obf_communist_org_mgt where ID = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.system.domain.CommunistOrgMgtDO">
+		select `ID`,`ORG_CODE`,`ORG_NAME`,`PARENT_ID`,`COMMUNIST_STATE`,`CREATE_TIME`,`CREATOR`,`UPDATE_TIME`,`UPDATER` from obf_communist_org_mgt
+        <where>  
+		  		  <if test="id != null and id != ''"> and ID = #{id} </if>
+		  		  <if test="orgCode != null and orgCode != ''"> and ORG_CODE = #{orgCode} </if>
+		  		  <if test="orgName != null and orgName != ''"> and ORG_NAME = #{orgName} </if>
+		  		  <if test="parentId != null and parentId != ''"> and PARENT_ID = #{parentId} </if>
+		  		  <if test="communistState != null and communistState != ''"> and COMMUNIST_STATE = #{communistState} </if>
+		  		  <if test="createTime != null and createTime != ''"> and CREATE_TIME = #{createTime} </if>
+		  		  <if test="creator != null and creator != ''"> and CREATOR = #{creator} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and UPDATE_TIME = #{updateTime} </if>
+		  		  <if test="updater != null and updater != ''"> and UPDATER = #{updater} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by ID desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from obf_communist_org_mgt
+		 <where>  
+		  		  <if test="id != null and id != ''"> and ID = #{id} </if>
+		  		  <if test="orgCode != null and orgCode != ''"> and ORG_CODE = #{orgCode} </if>
+		  		  <if test="orgName != null and orgName != ''"> and ORG_NAME = #{orgName} </if>
+		  		  <if test="parentId != null and parentId != ''"> and PARENT_ID = #{parentId} </if>
+		  		  <if test="communistState != null and communistState != ''"> and COMMUNIST_STATE = #{communistState} </if>
+		  		  <if test="createTime != null and createTime != ''"> and CREATE_TIME = #{createTime} </if>
+		  		  <if test="creator != null and creator != ''"> and CREATOR = #{creator} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and UPDATE_TIME = #{updateTime} </if>
+		  		  <if test="updater != null and updater != ''"> and UPDATER = #{updater} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.system.domain.CommunistOrgMgtDO" useGeneratedKeys="true" keyProperty="id">
+		insert into obf_communist_org_mgt
+		(
+			`ORG_CODE`, 
+			`ORG_NAME`, 
+			`PARENT_ID`, 
+			`COMMUNIST_STATE`, 
+			`CREATE_TIME`, 
+			`CREATOR`, 
+			`UPDATE_TIME`, 
+			`UPDATER`
+		)
+		values
+		(
+			#{orgCode}, 
+			#{orgName}, 
+			#{parentId}, 
+			#{communistState}, 
+			#{createTime}, 
+			#{creator}, 
+			#{updateTime}, 
+			#{updater}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.system.domain.CommunistOrgMgtDO">
+		update obf_communist_org_mgt 
+		<set>
+			<if test="orgCode != null">`ORG_CODE` = #{orgCode}, </if>
+			<if test="orgName != null">`ORG_NAME` = #{orgName}, </if>
+			<if test="parentId != null">`PARENT_ID` = #{parentId}, </if>
+			<if test="communistState != null">`COMMUNIST_STATE` = #{communistState}, </if>
+			<if test="createTime != null">`CREATE_TIME` = #{createTime}, </if>
+			<if test="creator != null">`CREATOR` = #{creator}, </if>
+			<if test="updateTime != null">`UPDATE_TIME` = #{updateTime}, </if>
+			<if test="updater != null">`UPDATER` = #{updater}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from obf_communist_org_mgt where ID = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from obf_communist_org_mgt where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

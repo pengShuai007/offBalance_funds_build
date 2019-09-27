@@ -53,6 +53,38 @@ public class UserDO implements Serializable {
     private String city;
     //所在地区
     private String district;
+    //行政组织编码
+    private Long adminOrgCode;
+    //行政组织
+    private String adminOrgName;
+    //党组织编码
+    private Long partyOrgCode;
+    //党组织名称
+    private String partyOrgName;
+    //团组织编码
+    private Long communistOrgCode;
+    //团组织名称
+    private String communistOrgName;
+    //工会组织编码
+    private Long tradeUnionCode;
+    // 工会组织名称
+    private String tradeUnionName;
+    //职务名称
+    private String postName;
+    //办公室电话
+    private String officeTel;
+    //直系领导ID
+    private Long directLeaderId;
+    //直系领导
+    private String directLeaderName;
+    //创建人
+    private String creator;
+    //更新人
+    private String updater;
+    //公司ID
+    private Long companyId;
+    //协同系统用户ID
+    private Long XtUserId;
 
     public Long getUserId() {
         return userId;
@@ -230,6 +262,134 @@ public class UserDO implements Serializable {
         this.roleSigns = roleSigns;
     }
 
+    public Long getAdminOrgCode() {
+        return adminOrgCode;
+    }
+
+    public void setAdminOrgCode(Long adminOrgCode) {
+        this.adminOrgCode = adminOrgCode;
+    }
+
+    public String getAdminOrgName() {
+        return adminOrgName;
+    }
+
+    public void setAdminOrgName(String adminOrgName) {
+        this.adminOrgName = adminOrgName;
+    }
+
+    public Long getPartyOrgCode() {
+        return partyOrgCode;
+    }
+
+    public void setPartyOrgCode(Long partyOrgCode) {
+        this.partyOrgCode = partyOrgCode;
+    }
+
+    public String getPartyOrgName() {
+        return partyOrgName;
+    }
+
+    public void setPartyOrgName(String partyOrgName) {
+        this.partyOrgName = partyOrgName;
+    }
+
+    public Long getCommunistOrgCode() {
+        return communistOrgCode;
+    }
+
+    public void setCommunistOrgCode(Long communistOrgCode) {
+        this.communistOrgCode = communistOrgCode;
+    }
+
+    public String getCommunistOrgName() {
+        return communistOrgName;
+    }
+
+    public void setCommunistOrgName(String communistOrgName) {
+        this.communistOrgName = communistOrgName;
+    }
+
+    public Long getTradeUnionCode() {
+        return tradeUnionCode;
+    }
+
+    public void setTradeUnionCode(Long tradeUnionCode) {
+        this.tradeUnionCode = tradeUnionCode;
+    }
+
+    public String getTradeUnionName() {
+        return tradeUnionName;
+    }
+
+    public void setTradeUnionName(String tradeUnionName) {
+        this.tradeUnionName = tradeUnionName;
+    }
+
+    public String getPostName() {
+        return postName;
+    }
+
+    public void setPostName(String postName) {
+        this.postName = postName;
+    }
+
+    public String getOfficeTel() {
+        return officeTel;
+    }
+
+    public void setOfficeTel(String officeTel) {
+        this.officeTel = officeTel;
+    }
+
+    public Long getDirectLeaderId() {
+        return directLeaderId;
+    }
+
+    public void setDirectLeaderId(Long directLeaderId) {
+        this.directLeaderId = directLeaderId;
+    }
+
+    public String getDirectLeaderName() {
+        return directLeaderName;
+    }
+
+    public void setDirectLeaderName(String directLeaderName) {
+        this.directLeaderName = directLeaderName;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public String getUpdater() {
+        return updater;
+    }
+
+    public void setUpdater(String updater) {
+        this.updater = updater;
+    }
+
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
+
+    public Long getXtUserId() {
+        return XtUserId;
+    }
+
+    public void setXtUserId(Long xtUserId) {
+        XtUserId = xtUserId;
+    }
+
     @Override
     public String toString() {
         return "UserDO{" +
@@ -254,6 +414,22 @@ public class UserDO implements Serializable {
                 ", province='" + province + '\'' +
                 ", city='" + city + '\'' +
                 ", district='" + district + '\'' +
+                ", adminOrgCode='" + adminOrgCode + '\'' +
+                ", adminOrgName='" + adminOrgName + '\'' +
+                ", partyOrgCode='" + partyOrgCode + '\'' +
+                ", partyOrgName='" + partyOrgName + '\'' +
+                ", communistOrgCode='" + communistOrgCode + '\'' +
+                ", communistOrgName='" + communistOrgName + '\'' +
+                ", tradeUnionCode='" + tradeUnionCode + '\'' +
+                ", tradeUnionName='" + tradeUnionName + '\'' +
+                ", postName='" + postName + '\'' +
+                ", officeTel='" + officeTel + '\'' +
+                ", directLeaderId='" + directLeaderId + '\'' +
+                ", directLeaderName='" + directLeaderName + '\'' +
+                ", creator='" + creator + '\'' +
+                ", updater='" + updater + '\'' +
+                ", companyId='" + companyId + '\'' +
+                ", XtUserId='" + XtUserId + '\'' +
                 '}';
     }
 }

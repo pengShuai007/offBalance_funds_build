@@ -1,19 +1,21 @@
 package com.bootdo.system.service;
 
+import com.bootdo.common.domain.MenuTree;
+import com.bootdo.common.domain.Tree;
+import com.bootdo.system.domain.MenuDO;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.springframework.stereotype.Service;
-
-import com.bootdo.common.domain.Tree;
-import com.bootdo.system.domain.MenuDO;
 
 @Service
 public interface MenuService {
 	Tree<MenuDO> getSysMenuTree(Long id);
 
 	List<Tree<MenuDO>> listMenuTree(Long id);
+
+	List<MenuTree<MenuDO>> listMenuTreeOther(Long id);
 
 	Tree<MenuDO> getTree();
 

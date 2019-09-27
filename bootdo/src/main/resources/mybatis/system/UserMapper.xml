@@ -9,12 +9,13 @@
 
     <select id="list" resultType="com.bootdo.system.domain.UserDO">
         select
-        `user_id`,`username`,`name`,`password`,`dept_id`,`email`,`mobile`,`status`,`user_id_create`,`gmt_create`,`gmt_modified`,`sex`,`birth`,`pic_id`,`live_address`,`hobby`,`province`,`city`,`district`
+        `user_id`,`username`,`name`,`password`,`dept_id`,`email`,`mobile`,`status`,`user_id_create`,`gmt_create`,`gmt_modified`,`sex`,`birth`,`pic_id`,`live_address`,`hobby`,`province`,`city`,`district`,
+        admin_org_code,admin_org_name,party_org_code,party_org_name,communist_org_code,communist_org_name,trade_union_code,trade_union_name,post_name,office_tel,direct_leader_id,direct_leader_name,creator,updater,company_id
         from sys_user
         <where>
             <if test="userId != null and userId != ''">and user_id = #{userId}</if>
             <if test="username != null and username != ''">and username = #{username}</if>
-            <if test="name != null and name != ''">and name = #{name}</if>
+            <if test="name != null and name != ''">and name regexp #{name}</if>
             <if test="password != null and password != ''">and password = #{password}</if>
             <if test="deptId != null and deptId != ''">and dept_id = #{deptId}</if>
             <if test="deptIds != null and deptIds.size() > 0">and dept_id in
@@ -36,6 +37,19 @@
             <if test="province != null and province != ''">and province = #{province}</if>
             <if test="city != null and city != ''">and city = #{city}</if>
             <if test="district != null and district != ''">and district = #{district}</if>
+            <if test="adminOrgCode != null and adminOrgCode != ''">and admin_org_code = #{adminOrgCode}</if>
+            <if test="adminOrgName != null and adminOrgName != ''">and admin_org_name regexp #{adminOrgName}</if>
+            <if test="partyOrgCode != null and partyOrgCode != ''">and party_org_code = #{partyOrgCode}</if>
+            <if test="partyOrgName != null and partyOrgName != ''">and party_org_name regexp #{partyOrgName}</if>
+            <if test="communistOrgCode != null and communistOrgCode != ''">and communist_org_code = #{communistOrgCode}</if>
+            <if test="communistOrgName != null and communistOrgName != ''">and communist_org_name regexp #{communistOrgName}</if>
+            <if test="tradeUnionCode != null and tradeUnionCode != ''">and trade_union_code = #{tradeUnionCode}</if>
+            <if test="tradeUnionName != null and tradeUnionName != ''">and trade_union_name regexp #{tradeUnionName}</if>
+            <if test="postName != null and postName != ''">and post_name = #{postName}</if>
+            <if test="officeTel != null and officeTel != ''">and office_tel = #{officeTel}</if>
+            <if test="directLeaderName != null and directLeaderName != ''">and direct_leader_name = #{directLeaderName}</if>
+            <if test="directLeaderId != null and directLeaderId != ''">and direct_leader_id = #{directLeaderId}</if>
+            <if test="companyId != null and companyId != ''">and company_id = #{companyId}</if>
         </where>
         <choose>
             <when test="sort != null and sort.trim() != ''">
@@ -72,6 +86,19 @@
             <if test="province != null and province != ''">and province = #{province}</if>
             <if test="city != null and city != ''">and city = #{city}</if>
             <if test="district != null and district != ''">and district = #{district}</if>
+            <if test="adminOrgCode != null and adminOrgCode != ''">and admin_org_code = #{adminOrgCode}</if>
+            <if test="adminOrgName != null and adminOrgName != ''">and admin_org_name regexp #{adminOrgName}</if>
+            <if test="partyOrgCode != null and partyOrgCode != ''">and party_org_code = #{partyOrgCode}</if>
+            <if test="partyOrgName != null and partyOrgName != ''">and party_org_name regexp #{partyOrgName}</if>
+            <if test="communistOrgCode != null and communistOrgCode != ''">and communist_org_code = #{communistOrgCode}</if>
+            <if test="communistOrgName != null and communistOrgName != ''">and communist_org_name regexp #{communistOrgName}</if>
+            <if test="tradeUnionCode != null and tradeUnionCode != ''">and trade_union_code = #{tradeUnionCode}</if>
+            <if test="tradeUnionName != null and tradeUnionName != ''">and trade_union_name regexp #{tradeUnionName}</if>
+            <if test="postName != null and postName != ''">and post_name = #{postName}</if>
+            <if test="officeTel != null and officeTel != ''">and office_tel = #{officeTel}</if>
+            <if test="directLeaderId != null and directLeaderId != ''">and direct_leader_id = #{directLeaderId}</if>
+            <if test="directLeaderName != null and directLeaderName != ''">and direct_leader_name = #{directLeaderName}</if>
+            <if test="companyId != null and companyId != ''">and company_id = #{companyId}</if>
         </where>
     </select>
 
@@ -89,13 +116,10 @@
 			`gmt_create`, 
 			`gmt_modified`, 
 			`sex`, 
-			`birth`, 
-			`pic_id`, 
-			`live_address`, 
-			`hobby`, 
-			`province`, 
-			`city`, 
-			`district`
+			`birth`,
+			admin_org_code,admin_org_name,party_org_code,party_org_name,
+			communist_org_code,communist_org_name,trade_union_code,trade_union_name,
+			post_name,office_tel,direct_leader_id,direct_leader_name,creator,updater,company_id
 		)
 		values
 		(
@@ -110,16 +134,11 @@
 			#{gmtCreate}, 
 			#{gmtModified}, 
 			#{sex}, 
-			#{birth}, 
-			#{picId}, 
-			#{liveAddress}, 
-			#{hobby}, 
-			#{province}, 
-			#{city}, 
-			#{district}
+			#{birth},
+            #{adminOrgCode}, #{adminOrgName},#{partyOrgCode},#{partyOrgName},#{communistOrgCode}, #{communistOrgName},
+            #{tradeUnionCode},#{tradeUnionName},#{postName},#{officeTel},#{directLeaderId},#{directLeaderName},#{creator},#{updater},#{companyId}
 		)
 	</insert>
-
     <update id="update" parameterType="com.bootdo.system.domain.UserDO">
         update sys_user
         <set>
@@ -135,12 +154,21 @@
             <if test="gmtModified != null">`gmt_modified` = #{gmtModified},</if>
             <if test="sex != null">`sex` = #{sex},</if>
             <if test="birth != null">`birth` = #{birth},</if>
-            <if test="picId != null">`pic_id` = #{picId},</if>
-            <if test="liveAddress != null">`live_address` = #{liveAddress},</if>
-            <if test="hobby != null">`hobby` = #{hobby},</if>
-            <if test="province != null">`province` = #{province},</if>
-            <if test="city != null">`city` = #{city},</if>
-            <if test="district != null">`district` = #{district}</if>
+            <if test="adminOrgCode != null">admin_org_code = #{adminOrgCode},</if>
+            <if test="adminOrgName != null">admin_org_name = #{adminOrgName},</if>
+            <if test="partyOrgCode != null">party_org_code = #{partyOrgCode},</if>
+            <if test="partyOrgName != null">party_org_name = #{partyOrgName},</if>
+            <if test="communistOrgCode != null">communist_org_code = #{communistOrgCode},</if>
+            <if test="communistOrgName != null">communist_org_name = #{communistOrgName},</if>
+            <if test="tradeUnionCode != null">trade_union_code = #{tradeUnionCode},</if>
+            <if test="tradeUnionName != null">trade_union_name = #{tradeUnionName},</if>
+            <if test="postName != null">post_name = #{postName},</if>
+            <if test="officeTel != null">office_tel = #{officeTel},</if>
+            <if test="directLeaderId != null">direct_leader_id = #{directLeaderId},</if>
+            <if test="directLeaderName != null">direct_leader_name = #{directLeaderName},</if>
+            <if test="creator != null">creator = #{creator},</if>
+            <if test="updater != null">updater = #{updater},</if>
+            <if test="companyId != null">company_id = #{companyId},</if>
         </set>
         where user_id = #{userId}
     </update>
