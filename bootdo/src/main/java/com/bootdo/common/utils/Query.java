@@ -19,8 +19,9 @@ public class Query extends LinkedHashMap<String, Object> {
         if (params.get("offset") != null && params.get("limit") != null) {
             this.offset = Integer.parseInt(params.get("offset").toString());
             this.limit = Integer.parseInt(params.get("limit").toString());
-            this.put("offset", offset);
-            this.put("page", offset / limit + 1);
+            int start = (offset - 1)* limit;
+            this.put("offset", start < 0 ? 0 : start);
+            this.put("page", offset);
             this.put("limit", limit);
         }
     }
