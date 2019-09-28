@@ -69,9 +69,14 @@
         <where>
             <if test="userId != null and userId != ''">and user_id = #{userId}</if>
             <if test="username != null and username != ''">and username = #{username}</if>
-            <if test="name != null and name != ''">and name = #{name}</if>
+            <if test="name != null and name != ''">and name regexp #{name}</if>
             <if test="password != null and password != ''">and password = #{password}</if>
             <if test="deptId != null and deptId != ''">and dept_id = #{deptId}</if>
+            <if test="deptIds != null and deptIds.size() > 0">and dept_id in
+                <foreach collection="deptIds" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
             <if test="email != null and email != ''">and email = #{email}</if>
             <if test="mobile != null and mobile != ''">and mobile = #{mobile}</if>
             <if test="status != null and status != ''">and status = #{status}</if>
@@ -96,8 +101,8 @@
             <if test="tradeUnionName != null and tradeUnionName != ''">and trade_union_name regexp #{tradeUnionName}</if>
             <if test="postName != null and postName != ''">and post_name = #{postName}</if>
             <if test="officeTel != null and officeTel != ''">and office_tel = #{officeTel}</if>
-            <if test="directLeaderId != null and directLeaderId != ''">and direct_leader_id = #{directLeaderId}</if>
             <if test="directLeaderName != null and directLeaderName != ''">and direct_leader_name = #{directLeaderName}</if>
+            <if test="directLeaderId != null and directLeaderId != ''">and direct_leader_id = #{directLeaderId}</if>
             <if test="companyId != null and companyId != ''">and company_id = #{companyId}</if>
         </where>
     </select>
