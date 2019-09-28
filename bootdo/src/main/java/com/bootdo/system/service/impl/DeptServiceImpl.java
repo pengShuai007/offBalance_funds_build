@@ -2,8 +2,11 @@ package com.bootdo.system.service.impl;
 
 import com.bootdo.common.domain.Tree;
 import com.bootdo.common.utils.BuildTree;
+import com.bootdo.common.utils.ShiroUtils;
 import com.bootdo.system.dao.DeptDao;
+import com.bootdo.system.domain.CompanyMgtDO;
 import com.bootdo.system.domain.DeptDO;
+import com.bootdo.system.service.CompanyMgtService;
 import com.bootdo.system.service.DeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,9 @@ import java.util.Map;
 public class DeptServiceImpl implements DeptService {
     @Autowired
     private DeptDao sysDeptMapper;
+
+    @Autowired
+    private CompanyMgtService companyMgtService;
 
     @Override
     public DeptDO get(Long deptId) {
@@ -100,7 +106,7 @@ public class DeptServiceImpl implements DeptService {
         return childIds;
     }
 
-    @Override
+  /*  @Override
     public Tree<DeptDO> getCompanyAndDeptTree() {
         List<Tree<DeptDO>> trees = new ArrayList<Tree<DeptDO>>();
         List<DeptDO> sysDepts = sysDeptMapper.list(new HashMap<String, Object>());
@@ -115,6 +121,170 @@ public class DeptServiceImpl implements DeptService {
             trees.add(tree);
         }
         // 默认顶级菜单为０，根据数据库实际情况调整
+        Tree<DeptDO> t = BuildTree.build(trees,"顶级节点");
+        return t;
+    }*/
+
+
+    @Override
+    public Tree<DeptDO> getCompanyAndDeptTree() {
+        List<Tree<DeptDO>> trees = new ArrayList<Tree<DeptDO>>();
+        String currentUser = ShiroUtils.getUser().getUsername();
+        if("admin".equals(currentUser)){
+            //超级管理员
+            Map<String, Object> param = new HashMap<String, Object>();
+            List<CompanyMgtDO> companyList = companyMgtService.list(param);
+
+            List<DeptDO> sysDepts = sysDeptMapper.list(new HashMap<String, Object>());
+
+            for(CompanyMgtDO companyMgtDOTemp :companyList){
+                String strCompanyId = companyMgtDOTemp.getId().toString();
+                Tree<DeptDO> tree = new Tree<DeptDO>();
+                tree.setId(companyMgtDOTemp.getId().toString());
+                tree.setParentId("0");
+                tree.setText(companyMgtDOTemp.getCompanyName());
+                Map<String, Object> state = new HashMap<>(16);
+                state.put("opened", true);
+                tree.setState(state);
+                Map<String, Object> attributes = new HashMap<String, Object> ();
+                attributes.put("nodeType","copmany");;
+                tree.setAttributes(attributes);
+                trees.add(tree);
+
+                for(DeptDO deptDo : sysDepts){
+                    if(strCompanyId.equals(deptDo.getCompanyId()+"")){
+                        Tree<DeptDO> deptTree = new Tree<DeptDO>();
+                        //deptTree.setId(strCompanyId + deptDo.getDeptId().toString());
+                        deptTree.setId(deptDo.getDeptId().toString());
+                        if("0".equals(deptDo.getParentId().toString())){
+                            deptTree.setParentId(strCompanyId);
+                        }else{
+                            deptTree.setParentId(deptDo.getParentId().toString());
+                        }
+                        deptTree.setText(deptDo.getName());
+                        Map<String, Object> deptState = new HashMap<>(16);
+                        deptState.put("opened", true);
+                        deptTree.setState(deptState);
+
+                        Map<String, Object> deptAttributes = new HashMap<String, Object> ();
+                        deptAttributes.put("nodeType","dept");
+                        deptAttributes.put("companyId",strCompanyId);
+                        deptAttributes.put("companyName",companyMgtDOTemp.getCompanyName());
+                        deptAttributes.put("companyLevel",companyMgtDOTemp.getCompanyLevel());
+                        deptTree.setAttributes(deptAttributes);
+
+                        trees.add(deptTree);
+                    }
+                }
+            }
+
+        }else{
+            Long companyId = ShiroUtils.getUser().getCompanyId();
+            CompanyMgtDO companyMgtDO = companyMgtService.get(companyId.intValue());
+            int level = companyMgtDO.getCompanyLevel();
+            String strCompanyId = companyMgtDO.getId() + "";
+            List<DeptDO> sysDepts = sysDeptMapper.list(new HashMap<String, Object>());
+            if("0".equals(level + "")){
+                //总公司
+                Map<String, Object> param = new HashMap<String, Object>();
+                List<CompanyMgtDO> companyList = companyMgtService.list(param);
+
+
+                for(CompanyMgtDO companyMgtDOTemp :companyList){
+                    String strCompanyIdTemp = companyMgtDOTemp.getId().toString();
+                    Tree<DeptDO> tree = new Tree<DeptDO>();
+                    tree.setId(companyMgtDOTemp.getId().toString());
+                    tree.setParentId("0");
+                    tree.setText(companyMgtDOTemp.getCompanyName());
+                    Map<String, Object> state = new HashMap<>(16);
+                    state.put("opened", true);
+                    tree.setState(state);
+                    Map<String, Object> attributes = new HashMap<String, Object> ();
+                    attributes.put("nodeType","copmany");
+                    tree.setAttributes(attributes);
+                    trees.add(tree);
+
+                    for(DeptDO deptDo : sysDepts){
+                        if(strCompanyIdTemp.equals(deptDo.getCompanyId()+"")){
+                            Tree<DeptDO> deptTree = new Tree<DeptDO>();
+                            deptTree.setId(deptDo.getDeptId().toString());
+                            if("0".equals(deptDo.getParentId().toString())){
+                                deptTree.setParentId(strCompanyIdTemp);
+                            }else{
+                                deptTree.setParentId(deptDo.getParentId().toString());
+                            }
+                            deptTree.setText(deptDo.getName());
+                            Map<String, Object> deptState = new HashMap<>(16);
+                            deptState.put("opened", true);
+                            deptTree.setState(deptState);
+
+                            Map<String, Object> deptAttributes = new HashMap<String, Object> ();
+                            deptAttributes.put("nodeType","dept");
+                            deptAttributes.put("companyId",strCompanyId);
+                            deptAttributes.put("companyName",companyMgtDOTemp.getCompanyName());
+                            deptAttributes.put("companyLevel",companyMgtDOTemp.getCompanyLevel());
+                            deptTree.setAttributes(deptAttributes);
+
+                            trees.add(deptTree);
+                        }
+                    }
+                }
+            }else{
+                //分公司
+
+                Tree<DeptDO> tree = new Tree<DeptDO>();
+                tree.setId(companyMgtDO.getId().toString());
+                tree.setParentId("0");
+                tree.setText(companyMgtDO.getCompanyName());
+                Map<String, Object> state = new HashMap<>(16);
+                state.put("opened", true);
+                tree.setState(state);
+                Map<String, Object> attributes = new HashMap<String, Object> ();
+                attributes.put("nodeType","copmany");
+                tree.setAttributes(attributes);
+                trees.add(tree);
+
+                for(DeptDO deptDo : sysDepts){
+                    if(strCompanyId.equals(deptDo.getCompanyId()+"")){
+                        Tree<DeptDO> deptTree = new Tree<DeptDO>();
+                        deptTree.setId(deptDo.getDeptId().toString());
+                        if("0".equals(deptDo.getParentId().toString())){
+                            deptTree.setParentId(strCompanyId);
+                        }else{
+                            deptTree.setParentId(deptDo.getParentId().toString());
+                        }
+                        deptTree.setText(deptDo.getName());
+                        Map<String, Object> deptState = new HashMap<>(16);
+                        deptState.put("opened", true);
+                        deptTree.setState(deptState);
+
+                        Map<String, Object> deptAttributes = new HashMap<String, Object> ();
+                        deptAttributes.put("nodeType","dept");
+                        deptAttributes.put("companyId",strCompanyId);
+                        deptAttributes.put("companyName",companyMgtDO.getCompanyName());
+                        deptAttributes.put("companyLevel",companyMgtDO.getCompanyLevel());
+                        deptTree.setAttributes(deptAttributes);
+
+                        trees.add(deptTree);
+                    }
+                }
+            }
+        }
+
+
+        /*List<Tree<DeptDO>> trees = new ArrayList<Tree<DeptDO>>();
+        List<DeptDO> sysDepts = sysDeptMapper.list(new HashMap<String, Object>());
+        for (DeptDO sysDept : sysDepts) {
+            Tree<DeptDO> tree = new Tree<DeptDO>();
+            tree.setId(sysDept.getDeptId().toString());
+            tree.setParentId(sysDept.getParentId().toString());
+            tree.setText(sysDept.getName());
+            Map<String, Object> state = new HashMap<>(16);
+            state.put("opened", true);
+            tree.setState(state);
+            trees.add(tree);
+        }
+        // 默认顶级菜单为０，根据数据库实际情况调整*/
         Tree<DeptDO> t = BuildTree.build(trees,"顶级节点");
         return t;
     }
