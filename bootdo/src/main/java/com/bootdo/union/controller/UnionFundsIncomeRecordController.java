@@ -1,9 +1,6 @@
 package com.bootdo.union.controller;
 
-import com.bootdo.common.utils.PageUtils;
-import com.bootdo.common.utils.Query;
-import com.bootdo.common.utils.R;
-import com.bootdo.common.utils.StringUtils;
+import com.bootdo.common.utils.*;
 import com.bootdo.union.dao.UnionFundsIncomeDetailDao;
 import com.bootdo.union.domain.ExpendRecordVO;
 import com.bootdo.union.domain.IncomeRecordVO;
@@ -38,19 +35,18 @@ public class UnionFundsIncomeRecordController {
 	@ResponseBody
 	@GetMapping("/list")
 	public PageUtils list(@RequestParam Map<String, Object> params){
-		//查询列表数据
-		//查询列表数据
-		if(!params.containsKey("offset")){
-			params.put("offset",0);
-		}else if(params.containsKey("offset") && StringUtils.isEmpty((String) params.get("offset"))){
-			params.put("offset",0);
-		}
-		if(!params.containsKey("limit")){
-			params.put("limit",20);
-		}else if(params.containsKey("limit") && StringUtils.isEmpty((String) params.get("limit"))){
-			params.put("limit",20);
-		}
-        Query query = new Query(params);
+//		if(!params.containsKey("offset")){
+//			params.put("offset",0);
+//		}else if(params.containsKey("offset") && StringUtils.isEmpty((String) params.get("offset"))){
+//			params.put("offset",0);
+//		}
+//		if(!params.containsKey("limit")){
+//			params.put("limit",20);
+//		}else if(params.containsKey("limit") && StringUtils.isEmpty((String) params.get("limit"))){
+//			params.put("limit",20);
+//		}
+		params.put("inCompanyId", ShiroUtils.getUser().getCompanyId());
+		Query query = new Query(params);
 		List<IncomeRecordVO> incomeRecordVOS = unionFundsIncomeRecordService.list(query);
 		int total = unionFundsIncomeRecordService.count(query);
 		PageUtils pageUtils = new PageUtils(incomeRecordVOS, total);
@@ -109,17 +105,6 @@ public class UnionFundsIncomeRecordController {
 
 		return result;
 	}
-	
 
-	
-	/**
-	 * 删除
-	 */
-	@PostMapping( "/batchRemove")
-	@ResponseBody
-	public R remove(@RequestParam("ids[]") Long[] ids){
-		unionFundsIncomeRecordService.batchRemove(ids);
-		return R.ok();
-	}
 	
 }

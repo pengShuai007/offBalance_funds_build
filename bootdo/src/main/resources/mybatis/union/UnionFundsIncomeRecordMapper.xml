@@ -106,14 +106,7 @@
 	</update>
 	
 	<delete id="remove">
-		update union_funds_income_record set is_delete = 1 where record_id = #{value}
-	</delete>
-	
-	<delete id="batchRemove">
-		update union_funds_income_record set is_delete = 1 record_id in
-		<foreach item="recordId" collection="array" open="(" separator="," close=")">
-			#{recordId}
-		</foreach>
+		update union_funds_income_record set is_delete = 1 where find_in_set(record_id = #{value})
 	</delete>
 
 </mapper>

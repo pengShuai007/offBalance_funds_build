@@ -31,5 +31,5 @@ public interface UnionFundsExpendRecordDao {
 	
 	int batchRemove(String[] ids);
 
-    List<ExpendRecordVO> todoList(String value);
+    List<ExpendRecordVO> todoList(Map value);
 }
