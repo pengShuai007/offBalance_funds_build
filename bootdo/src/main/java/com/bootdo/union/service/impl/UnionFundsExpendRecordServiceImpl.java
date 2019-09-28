@@ -186,6 +186,10 @@ public class UnionFundsExpendRecordServiceImpl implements UnionFundsExpendRecord
 				if(StringUtils.isEmpty(unionFundsExpendRecord.getCashierConfirm())){
 					unionFundsExpendRecord.setCashierConfirm(operateStatus);
 				}
+
+				unionFundsExpendRecord.setActivitiStatus(ActivitiConstant.ACTIVITI_PROCESS_UNION_END);
+				unionFundsExpendRecordDao.update(unionFundsExpendRecord);
+
 				//工作流结束，创建分公司收入记录
 				ExpendRecordVO expendRecordVO= unionFundsExpendRecordDao.get(unionFundsExpendRecord.getRecordId());
 

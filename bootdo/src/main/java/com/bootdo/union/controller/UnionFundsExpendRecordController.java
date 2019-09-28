@@ -87,7 +87,7 @@ public class UnionFundsExpendRecordController {
 			unionFundsExpendRecordService.update(unionFundsExpendRecord,operateStatus);
 			return R.ok();
 		}else {
-			return R.error(2,"operateStatus ："+operateStatus+" 不在流程判断范围内");
+			return R.error(2,"operateStatus ："+operateStatus+" 不在流程判断范围内,OK or NO");
 		}
 
 	}
