@@ -114,10 +114,17 @@ public class RoleController extends BaseController {
 	}
 
 	@GetMapping("/listWithParam")
-	@ResponseBody()
+	@ResponseBody
 	List<RoleDO> listWithParam(@RequestParam Map<String, Object> params) {
 		Query query = new Query(params);
 		List<RoleDO> roles = roleService.listWithParam(query);
+		return roles;
+	}
+
+	@GetMapping("/listByUserId")
+	@ResponseBody
+	List<RoleDO> listByUserId(@RequestParam Long userId) {
+		List<RoleDO> roles = roleService.list(userId);
 		return roles;
 	}
 }

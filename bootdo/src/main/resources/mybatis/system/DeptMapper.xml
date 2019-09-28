@@ -41,6 +41,7 @@
 			<if test="name != null and name != ''"> and name = #{name} </if>
 			<if test="orderNum != null and orderNum != ''"> and order_num = #{orderNum} </if>
 			<if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
+			<if test="companyId != null and companyId != ''"> and company_id = #{companyId} </if>
 		</where>
 	</select>
 
