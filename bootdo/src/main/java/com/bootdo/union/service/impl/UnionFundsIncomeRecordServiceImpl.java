@@ -75,6 +75,9 @@ public class UnionFundsIncomeRecordServiceImpl implements UnionFundsIncomeRecord
 		//保存收入记录明细
 		incomeDetailDO.setIncomeId(UUIDUtils.randomUUID());
 		incomeDetailDO.setRecordId(unionFundsIncomeRecord.getRecordId());
+		if(null == incomeDetailDO.getEnterDate()){
+			incomeDetailDO.setEnterDate(new Date());
+		}
 		int d =  unionFundsIncomeDetailDao.save(incomeDetailDO);
 		return i;
 	}

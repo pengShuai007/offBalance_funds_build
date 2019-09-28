@@ -4,11 +4,11 @@
 <mapper namespace="com.bootdo.union.dao.UnionFundsExpendRecordDao">
 
 	<select id="get" resultType="com.bootdo.union.domain.ExpendRecordVO">
-		select `id`,`record_id`,`out_company_id`,`out_company_name`,`in_company_id`,`in_company_name`,`apply_person`,`apply_department`,`type`,`reason`,`all_amount`,`expen_time`,`payment_type`,`activity_type`,`activity_direction`,`activity_unit`,`activity_time`,`activity_person_num`,`remarks`,`department_review`,`supervisor_approval`,`finance_review`,`cashier_confirm`,`activiti_status`,`create_time`,`modifier`,`modify_time`,`settle_accounts_id` from union_funds_expend_record where is_delete = 0 and  record_id = #{value}
+		select `id`,`record_id`,`out_company_id`,`out_company_name`,`in_company_id`,`in_company_name`,`apply_person`,`apply_department`,`type`,`reason`,`all_amount`,`expen_time`,`payment_type`,`activity_type`,`activity_direction`,`activity_unit`,`activity_time`,`activity_person_num`,`remarks`,`department_review`,`supervisor_approval`,`finance_review`,`cashier_confirm`,`activiti_status`,`create_time`,`modifier`,`modify_time`,`settle_accounts_id`,`process_instance_id` from union_funds_expend_record where is_delete = 0 and  record_id = #{value}
 	</select>
 
 	<select id="list" resultType="com.bootdo.union.domain.ExpendRecordVO">
-		select `id`,`record_id`,`out_company_id`,`out_company_name`,`in_company_id`,`in_company_name`,`apply_person`,`apply_department`,`type`,`reason`,`all_amount`,`expen_time`,`payment_type`,`activity_type`,`activity_direction`,`activity_unit`,`activity_time`,`activity_person_num`,`remarks`,`department_review`,`supervisor_approval`,`finance_review`,`cashier_confirm`,`activiti_status`,`create_time`,`modifier`,`modify_time`,`settle_accounts_id` from union_funds_expend_record
+		select `id`,`record_id`,`out_company_id`,`out_company_name`,`in_company_id`,`in_company_name`,`apply_person`,`apply_department`,`type`,`reason`,`all_amount`,`expen_time`,`payment_type`,`activity_type`,`activity_direction`,`activity_unit`,`activity_time`,`activity_person_num`,`remarks`,`department_review`,`supervisor_approval`,`finance_review`,`cashier_confirm`,`activiti_status`,`create_time`,`modifier`,`modify_time`,`settle_accounts_id`,`process_instance_id` from union_funds_expend_record
         <where>
 			  is_delete = 0
 			  <if test="id != null and id != ''"> and id = #{id} </if>
@@ -56,7 +56,9 @@
 	<select id="todoList" resultType="com.bootdo.union.domain.ExpendRecordVO">
 		select `id`,`record_id`,`out_company_id`,`out_company_name`,`in_company_id`,`in_company_name`,`apply_person`,`apply_department`,`type`,`reason`,`all_amount`,`expen_time`,`payment_type`,`activity_type`,`activity_direction`,`activity_unit`,`activity_time`,`activity_person_num`,`remarks`,`department_review`,`supervisor_approval`,`finance_review`,`cashier_confirm`,`activiti_status`,`create_time`,`modifier`,`modify_time`,`settle_accounts_id`,`process_instance_id` from union_funds_expend_record
 		<where>
-			is_delete = 0 and find_in_set(process_instance_id,#{value})
+			is_delete = 0 and find_in_set(process_instance_id,#{processInstanceIds})
+			<if test="outCompanyId != null and outCompanyId != ''"> and out_company_id = #{outCompanyId} </if>
+
 		</where>
 	</select>
 
@@ -124,7 +126,8 @@
 			`create_time`, 
 			`modifier`, 
 			`modify_time`, 
-			`settle_accounts_id`
+			`settle_accounts_id`,
+			`process_instance_id`
 		)
 		values
 		(
@@ -155,7 +158,8 @@
 			#{createTime}, 
 			#{modifier}, 
 			#{modifyTime}, 
-			#{settleAccountsId}
+			#{settleAccountsId},
+			#{processInstanceId}
 		)
 	</insert>
 	 
@@ -195,14 +199,7 @@
 	</update>
 	
 	<delete id="remove">
-		update union_funds_expend_record  set is_delete = 1 where record_id = #{value}
-	</delete>
-	
-	<delete id="batchRemove">
-		update union_funds_expend_record set is_delete = 1 where record_id in
-		<foreach item="recordId" collection="array" open="(" separator="," close=")">
-			#{recordId}
-		</foreach>
+		update union_funds_expend_record  set is_delete = 1 where find_in_set(record_id , #{value})
 	</delete>
 
 </mapper>
