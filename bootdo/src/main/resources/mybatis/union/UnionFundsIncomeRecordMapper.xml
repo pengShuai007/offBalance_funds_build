@@ -106,7 +106,7 @@
 	</update>
 	
 	<delete id="remove">
-		update union_funds_income_record set is_delete = 1 where find_in_set(record_id = #{value})
+		update union_funds_income_record set is_delete = 1 where find_in_set(record_id , #{value})
 	</delete>
 
 </mapper>
