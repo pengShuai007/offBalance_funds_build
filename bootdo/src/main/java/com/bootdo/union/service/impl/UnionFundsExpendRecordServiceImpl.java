@@ -103,7 +103,7 @@ public class UnionFundsExpendRecordServiceImpl implements UnionFundsExpendRecord
 					vars);
 			// 办理支出申请任务
 			Task applyTask = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
-			applyTask.setAssignee(ShiroUtils.getUser().getUserId().toString());
+			applyTask.setAssignee(activitiUtils.getActivitiUserId());
 			taskService.complete(applyTask.getId());
 
 			// 分配用户组
@@ -139,9 +139,9 @@ public class UnionFundsExpendRecordServiceImpl implements UnionFundsExpendRecord
 				}
 				unionFundsExpendRecord.setProcessInstanceId(old.getProcessInstanceId());
 			}
-			// 直接办理下一个任务
+			// 直接办理任务
 			Task applyTask = taskService.createTaskQuery().processInstanceId(unionFundsExpendRecord.getProcessInstanceId()).singleResult();
-			applyTask.setAssignee(ShiroUtils.getUser().getUsername());
+			applyTask.setAssignee(activitiUtils.getActivitiUserId());
 			taskService.complete(applyTask.getId());
 
 			// 分配用户组
@@ -228,7 +228,9 @@ public class UnionFundsExpendRecordServiceImpl implements UnionFundsExpendRecord
 	*/
 	@Override
 	public List<ExpendRecordVO> todoList() {
-		List<Task> tasks = taskService.createTaskQuery().taskCandidateUser(activitiUtils.getActivitiUserId()).list();
+		List<Task> tasks = taskService.createTaskQuery().taskAssignee(activitiUtils.getActivitiUserId()).list();
+		List<Task> taskuser = taskService.createTaskQuery().taskCandidateUser(activitiUtils.getActivitiUserId()).list();
+		tasks.addAll(taskuser);
 		StringBuilder processInstanceIds = new StringBuilder("");
 		if(tasks.size() < 1){
 			return new ArrayList<>();
@@ -283,7 +285,7 @@ public class UnionFundsExpendRecordServiceImpl implements UnionFundsExpendRecord
 	*/
 	@Override
 	public List<ExpendRecordVO> historyTask() {
-		List<HistoricTaskInstance> tasks = historyService.createHistoricTaskInstanceQuery().taskCandidateUser(activitiUtils.getActivitiUserId()).list();
+		List<HistoricTaskInstance> tasks = historyService.createHistoricTaskInstanceQuery().taskAssignee(activitiUtils.getActivitiUserId()).list();
 		StringBuilder processInstanceIds = new StringBuilder("");
 		if(tasks.size() < 1){
 			return new ArrayList<>();
