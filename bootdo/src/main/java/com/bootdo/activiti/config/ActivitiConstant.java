@@ -19,6 +19,9 @@ public class ActivitiConstant {
      */
     //流程标识processKey
     public static final String ACTIVITI_PROCESS_UNION = "process-inion-funds";
+
+    //部门领导审核
+    public static final String ACTIVITI_PROCESS_UNION_EXPEND_APPLY = "expend_apply";
     //部门领导审核
     public static final String ACTIVITI_PROCESS_UNION_DEPARTMENT_REVIEW = "department_review";
     //主管领导审批
