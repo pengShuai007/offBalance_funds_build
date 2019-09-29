@@ -4,11 +4,11 @@
 <mapper namespace="com.bootdo.union.dao.UnionFundsExpendRecordDao">
 
 	<select id="get" resultType="com.bootdo.union.domain.ExpendRecordVO">
-		select `id`,`record_id`,`out_company_id`,`out_company_name`,`in_company_id`,`in_company_name`,`apply_person`,`apply_department`,`type`,`reason`,`all_amount`,`expen_time`,`payment_type`,`activity_type`,`activity_direction`,`activity_unit`,`activity_time`,`activity_person_num`,`remarks`,`department_review`,`supervisor_approval`,`finance_review`,`cashier_confirm`,`activiti_status`,`create_time`,`modifier`,`modify_time`,`settle_accounts_id`,`process_instance_id` from union_funds_expend_record where is_delete = 0 and  record_id = #{value}
+		select `id`,`record_id`,`out_company_id`,`out_company_name`,`in_company_id`,`in_company_name`,`apply_person`,`apply_time`,`apply_department`,`type`,`reason`,`all_amount`,`expen_time`,`payment_type`,`activity_type`,`activity_direction`,`activity_unit`,`activity_time`,`activity_person_num`,`remarks`,`department_review`,`supervisor_approval`,`finance_review`,`cashier_confirm`,`activiti_status`,`create_time`,`modifier`,`modify_time`,`settle_accounts_id`,`process_instance_id` from union_funds_expend_record where is_delete = 0 and  record_id = #{value}
 	</select>
 
 	<select id="list" resultType="com.bootdo.union.domain.ExpendRecordVO">
-		select `id`,`record_id`,`out_company_id`,`out_company_name`,`in_company_id`,`in_company_name`,`apply_person`,`apply_department`,`type`,`reason`,`all_amount`,`expen_time`,`payment_type`,`activity_type`,`activity_direction`,`activity_unit`,`activity_time`,`activity_person_num`,`remarks`,`department_review`,`supervisor_approval`,`finance_review`,`cashier_confirm`,`activiti_status`,`create_time`,`modifier`,`modify_time`,`settle_accounts_id`,`process_instance_id` from union_funds_expend_record
+		select `id`,`record_id`,`out_company_id`,`out_company_name`,`in_company_id`,`in_company_name`,`apply_person`,`apply_time`,`apply_department`,`type`,`reason`,`all_amount`,`expen_time`,`payment_type`,`activity_type`,`activity_direction`,`activity_unit`,`activity_time`,`activity_person_num`,`remarks`,`department_review`,`supervisor_approval`,`finance_review`,`cashier_confirm`,`activiti_status`,`create_time`,`modifier`,`modify_time`,`settle_accounts_id`,`process_instance_id` from union_funds_expend_record
         <where>
 			  is_delete = 0
 			  <if test="id != null and id != ''"> and id = #{id} </if>
@@ -18,7 +18,7 @@
 			  <if test="inCompanyId != null and inCompanyId != ''"> and in_company_id = #{inCompanyId} </if>
 			  <if test="inCompanyName != null and inCompanyName != ''"> and in_company_name = #{inCompanyName} </if>
 			  <if test="applyPerson != null and applyPerson != ''"> and apply_person = #{applyPerson} </if>
-			  <if test="applyDepartment != null and applyDepartment != ''"> and apply_department = #{applyDepartment} </if>
+			<if test="applyDepartment != null and applyDepartment != ''"> and apply_department = #{applyDepartment} </if>
 			  <if test="type != null and type != ''"> and type = #{type} </if>
 			  <if test="reason != null and reason != ''"> and reason = #{reason} </if>
 			  <if test="allAmount != null and allAmount != ''"> and all_amount = #{allAmount} </if>
@@ -54,7 +54,7 @@
 	</select>
 
 	<select id="todoList" resultType="com.bootdo.union.domain.ExpendRecordVO">
-		select `id`,`record_id`,`out_company_id`,`out_company_name`,`in_company_id`,`in_company_name`,`apply_person`,`apply_department`,`type`,`reason`,`all_amount`,`expen_time`,`payment_type`,`activity_type`,`activity_direction`,`activity_unit`,`activity_time`,`activity_person_num`,`remarks`,`department_review`,`supervisor_approval`,`finance_review`,`cashier_confirm`,`activiti_status`,`create_time`,`modifier`,`modify_time`,`settle_accounts_id`,`process_instance_id` from union_funds_expend_record
+		select `id`,`record_id`,`out_company_id`,`out_company_name`,`in_company_id`,`in_company_name`,`apply_person`,`apply_time`,`apply_department`,`type`,`reason`,`all_amount`,`expen_time`,`payment_type`,`activity_type`,`activity_direction`,`activity_unit`,`activity_time`,`activity_person_num`,`remarks`,`department_review`,`supervisor_approval`,`finance_review`,`cashier_confirm`,`activiti_status`,`create_time`,`modifier`,`modify_time`,`settle_accounts_id`,`process_instance_id` from union_funds_expend_record
 		<where>
 			is_delete = 0 and find_in_set(process_instance_id,#{processInstanceIds})
 			<if test="outCompanyId != null and outCompanyId != ''"> and out_company_id = #{outCompanyId} </if>
