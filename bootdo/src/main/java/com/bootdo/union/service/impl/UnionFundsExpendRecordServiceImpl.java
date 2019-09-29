@@ -126,6 +126,9 @@ public class UnionFundsExpendRecordServiceImpl implements UnionFundsExpendRecord
 			detailDO.setExpentId(UUIDUtils.randomUUID());
 			detailDO.setRecordId(unionFundsExpendRecord.getRecordId());
 			detailDO.setCreateTime(new Date());
+			if(StringUtils.isNotEmpty(unionFundsExpendRecord.getInCompanyName())){
+				detailDO.setBranchOffice(unionFundsExpendRecord.getInCompanyName());
+			}
 			int d = unionFundsExpendDetailDao.save(detailDO);
 
 			return r;
