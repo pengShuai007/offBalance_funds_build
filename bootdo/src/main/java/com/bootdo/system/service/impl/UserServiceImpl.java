@@ -5,9 +5,11 @@ import com.bootdo.common.domain.FileDO;
 import com.bootdo.common.domain.Tree;
 import com.bootdo.common.service.FileService;
 import com.bootdo.common.utils.*;
+import com.bootdo.system.dao.CompanyMgtDao;
 import com.bootdo.system.dao.DeptDao;
 import com.bootdo.system.dao.UserDao;
 import com.bootdo.system.dao.UserRoleDao;
+import com.bootdo.system.domain.CompanyMgtDO;
 import com.bootdo.system.domain.DeptDO;
 import com.bootdo.system.domain.UserDO;
 import com.bootdo.system.domain.UserRoleDO;
@@ -42,6 +44,9 @@ public class UserServiceImpl implements UserService {
     private BootdoConfig bootdoConfig;
     @Autowired
     DeptService deptService;
+    @Autowired
+    private CompanyMgtDao companyMgtDao;
+
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Override
@@ -56,19 +61,39 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDO> list(Map<String, Object> map) {
-        String deptId = map.get("deptId").toString();
-        if (StringUtils.isNotBlank(deptId)) {
-            Long deptIdl = Long.valueOf(deptId);
-            List<Long> childIds = deptService.listChildrenIds(deptIdl);
-            childIds.add(deptIdl);
-            map.put("deptId", null);
-            map.put("deptIds",childIds);
+        if(map.containsKey("deptId")){
+            String deptId = map.get("deptId").toString();
+            if (StringUtils.isNotBlank(deptId)) {
+                Long deptIdl = Long.valueOf(deptId);
+                List<Long> childIds = deptService.listChildrenIds(deptIdl);
+                childIds.add(deptIdl);
+                map.put("deptId", null);
+                map.put("deptIds",childIds);
+            }
+        }
+        String userName = ShiroUtils.getUser().getUsername();
+        Long companyId = ShiroUtils.getUser().getCompanyId();
+        if(companyId != null){
+            CompanyMgtDO companyInfo = companyMgtDao.get(companyId.intValue());
+            //admin用户以及总公司用户可以查看所有用户
+            if(!"admin".equals(userName) && !"0".equals(companyInfo.getCompanyLevel())){
+                map.put("companyId",companyId);
+            }
         }
         return userMapper.list(map);
     }
 
     @Override
     public int count(Map<String, Object> map) {
+        String userName = ShiroUtils.getUser().getUsername();
+        Long companyId = ShiroUtils.getUser().getCompanyId();
+        if(companyId != null){
+            CompanyMgtDO companyInfo = companyMgtDao.get(companyId.intValue());
+            //admin用户以及总公司用户可以查看所有用户
+            if(!"admin".equals(userName) && companyInfo != null && !"0".equals(companyInfo.getCompanyLevel())){
+                map.put("companyId",companyId);
+            }
+        }
         return userMapper.count(map);
     }
 
