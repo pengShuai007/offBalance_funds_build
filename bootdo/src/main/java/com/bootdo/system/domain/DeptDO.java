@@ -87,6 +87,14 @@ public class DeptDO implements Serializable {
 		return delFlag;
 	}
 
+	public Integer getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
+
 	@Override
 	public String toString() {
 		return "DeptDO{" +

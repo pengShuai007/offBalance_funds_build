@@ -118,6 +118,9 @@ public class UnionFundsExpendRecordServiceImpl implements UnionFundsExpendRecord
 			unionFundsExpendRecord.setCreateTime(new Date());
 			unionFundsExpendRecord.setActivitiStatus(nextTask.getTaskDefinitionKey());
 			unionFundsExpendRecord.setProcessInstanceId(processInstance.getId());
+			if(StringUtils.isEmpty(unionFundsExpendRecord.getOutCompanyId())){
+				unionFundsExpendRecord.setOutCompanyId(String.valueOf(ShiroUtils.getUser().getCompanyId()));
+			}
 			int r = unionFundsExpendRecordDao.save(unionFundsExpendRecord);
 			//保存支出明细
 			detailDO.setExpentId(UUIDUtils.randomUUID());
@@ -163,6 +166,7 @@ public class UnionFundsExpendRecordServiceImpl implements UnionFundsExpendRecord
 		if(null == currentTask){
 			return ;
 		}
+		taskService.claim(currentTask.getId(),activitiUtils.getActivitiUserId());
 		switch (unionFundsExpendRecord.getActivitiStatus()) {
             case ActivitiConstant.ACTIVITI_PROCESS_UNION_DEPARTMENT_REVIEW:
 				if(StringUtils.isEmpty(unionFundsExpendRecord.getDepartmentReview())){
